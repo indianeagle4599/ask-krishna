@@ -1,0 +1,13 @@
+# Agent/context entry points kept local.
+.cursor/
+agent-kit/
+docs/
+AGENTS.md
+CLAUDE.md
+TODO.md
+
+# Local scratch and platform noise.
+.DS_Store
+Thumbs.db
+*.log
+__pycache__/

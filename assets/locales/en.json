@@ -1,0 +1,38 @@
+{
+  "appName": "Ask Krishna",
+  "reference": "Bhagavad Gita",
+  "pageLabels": {
+    "reflect": "Reflect",
+    "passage": "Passage",
+    "wait": "Wait"
+  },
+  "labels": {
+    "theme": "Theme",
+    "language": "Language"
+  },
+  "themes": {
+    "vedic-light": "Vedic Light",
+    "vedic-dark": "Vedic Dark",
+    "modern-light": "Modern Light",
+    "modern-dark": "Modern Dark"
+  },
+  "actions": {
+    "begin": "Begin",
+    "receive": "Receive",
+    "back": "Back",
+    "save": "Save",
+    "saved": "Saved. Ask again when ready.",
+    "saveAll": "Save All",
+    "saveError": "Couldn't save. Please try again."
+  },
+  "messages": {
+    "hold": "Hold your question silently.",
+    "wait": "If you didn’t get your answer right now, maybe you must wait.",
+    "ponder": "Meanwhile, ponder over these:"
+  },
+  "sacred": {
+    "mantra": "Hare Krishna Hare Krishna\nKrishna Krishna Hare Hare\nHare Rama Hare Rama\nRama Rama Hare Hare",
+    "purification": "Om. Whether impure or pure, in any state, one who remembers the lotus-eyed Lord is purified within and without."
+  },
+  "disclaimer": "This page presents verses from the Bhagavad Gita for reflection and inspiration. Interpretations of ancient wisdom can vary across traditions, teachers, and contexts. The passages shown may offer guidance, but they are not guaranteed answers or substitutes for your own judgment."
+}
