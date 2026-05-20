@@ -21,14 +21,28 @@
   const manifest = i18n.manifest;
 
   const $ = (selector, root = document) => root.querySelector(selector);
-  const page = document.body.dataset.page;
+  let page = document.body.dataset.page;
   const screen = $("[data-screen]");
   const root = location.pathname.includes("/pages/") ? "../" : "";
+  if (page !== "index") {
+    localStorage.removeItem(SESSION);
+    location.replace(root || "./");
+    return;
+  }
   let session = readSession();
   let reflectTimer = 0;
 
-  function pageUrl(name) {
-    return name === "index" ? `${root}index.html` : `${root}pages/${name}.html`;
+  function homeUrl() {
+    return root || "./";
+  }
+
+  function go(name) {
+    clearTimeout(reflectTimer);
+    reflectTimer = 0;
+    page = name;
+    document.body.dataset.page = name;
+    history.replaceState({ page: name }, "", homeUrl());
+    render();
   }
 
   function language() {
@@ -70,11 +84,7 @@
   function goHome(event) {
     if (event) event.preventDefault();
     reset();
-    location.href = pageUrl("index");
-  }
-
-  function isReload() {
-    return performance.getEntriesByType("navigation")[0]?.type === "reload";
+    go("index");
   }
 
   function setTheme(name, persist = true) {
@@ -116,7 +126,7 @@
     bar.className = "topbar";
 
     const brand = document.createElement("a");
-    brand.href = pageUrl("index");
+    brand.href = homeUrl();
     brand.className = "brand";
     const logo = document.createElement("span");
     logo.className = "brand-logo";
@@ -168,7 +178,8 @@
   }
 
   function pageFrame(content) {
-    document.body.replaceChildren(topbar(), screen, footer());
+    const counter = document.querySelector("[data-goatcounter]");
+    document.body.replaceChildren(topbar(), screen, footer(), ...(counter ? [counter] : []));
     screen.replaceChildren(content);
   }
 
@@ -176,7 +187,7 @@
     reset();
     const content = document.createElement("section");
     content.className = "center";
-    content.append(sacredBlock("mantra"), button(text("actions.begin"), () => location.href = pageUrl("reflect")));
+    content.append(sacredBlock("mantra"), button(text("actions.begin"), () => go("reflect")));
     pageFrame(content);
   }
 
@@ -197,7 +208,7 @@
     verse.append(session.holdReady ? block("mantra", text("messages.hold")) : sacredBlock("purification"));
     const pulse = document.createElement("i");
     pulse.className = "pulse";
-    const receive = button(text("actions.receive"), () => location.href = pageUrl("passage"), "text-button reveal");
+    const receive = button(text("actions.receive"), () => go("passage"), "text-button reveal");
     if (session.receiveReady) receive.classList.add("show");
     content.append(verse, pulse, receive);
     pageFrame(content);
@@ -304,7 +315,7 @@
   function move(step) {
     if (!session.passages?.length) return;
     if ((session.index || 0) === session.passages.length - 1 && step > 0) {
-      location.href = pageUrl("wait");
+      go("wait");
       return;
     }
     const next = Math.max(0, Math.min((session.index || 0) + step, session.passages.length - 1));
@@ -319,7 +330,7 @@
     content.className = "center wait-screen";
     actions.className = "card-actions";
     actions.append(
-      button(text("actions.back"), () => location.href = pageUrl("passage"), "text-button"),
+      button(text("actions.back"), () => go("passage"), "text-button"),
       button(text("actions.saveAll"), () => saveAll(status), "text-button save-all"),
     );
     content.append(block("wait-note", text("messages.wait")), block("muted ponder-line", text("messages.ponder")), actions, status);
@@ -522,7 +533,6 @@
     document.documentElement.lang = manifest[language()].htmlLang;
     const label = text(`pageLabels.${page}`);
     document.title = label ? `${label} - ${text("appName")}` : text("appName");
-    if (page !== "index" && isReload()) return goHome();
     if (page === "index") return home();
     if (page === "reflect") return reflect();
     if (page === "passage") return passage();
@@ -530,8 +540,8 @@
   }
 
   document.addEventListener("keydown", (event) => {
-    if (event.key === "Enter" && page === "index" && !event.target.closest("button,a")) location.href = pageUrl("reflect");
-    if (event.key === "Enter" && page === "reflect" && session.receiveReady && !event.target.closest("button,a")) location.href = pageUrl("passage");
+    if (event.key === "Enter" && page === "index" && !event.target.closest("button,a")) go("reflect");
+    if (event.key === "Enter" && page === "reflect" && session.receiveReady && !event.target.closest("button,a")) go("passage");
     if (event.key === "ArrowLeft" && page === "passage") move(-1);
     if (event.key === "ArrowRight" && page === "passage") move(1);
   });
