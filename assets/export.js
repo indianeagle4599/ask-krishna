@@ -165,4 +165,10 @@
     await document.fonts?.ready;
     return AK.downloadCanvas(AK.cardCanvas(entry, translations), AK.passageFileName(entry));
   };
+
+  AK.saveEntry = async function (entry, translations, statusEl) {
+    const ok = await AK.download(entry, translations);
+    if (statusEl) statusEl.textContent = AK.text(ok ? "actions.saved" : "actions.saveError");
+    return ok;
+  };
 })();

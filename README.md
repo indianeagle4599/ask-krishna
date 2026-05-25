@@ -10,7 +10,7 @@
 Ask Krishna is a serverless, local-first Bhagavad Gita app with two quiet flows:
 
 1. **Reflect** — begin from the Hare Krishna mahamantra, sit through a purification pause, hold a question silently, and receive five three-verse passages one at a time.
-2. **Read Gita** — browse all 700 verses one at a time, with Sanskrit text, translations, bookmarks, and resume where you left off.
+2. **Read Gita** — browse all 700 verses one at a time, with Sanskrit text, translations, marks, and resume where you left off.
 
 It is designed as clean static pages: no backend, no account system, no sync, no build step. Theme and language preferences live in `localStorage`. Verse text and UI strings load from static JSON on demand.
 
@@ -49,10 +49,35 @@ Reflect: Begin → Purify → Hold → Receive → Save or wait.
   </tr>
 </table>
 
+Read Gita: verse index (with marks), reader.
+
+<table>
+  <tr>
+    <td align="center" valign="top">
+      <strong>Reader</strong><br />
+      <img src="assets/screenshots/read-reader.png" alt="Read Gita verse screen" width="240" />
+    </td>
+    <td align="center" valign="top">
+      <strong>Verse index</strong><br />
+      <img src="assets/screenshots/read-index.png" alt="Chapter and verse index" width="240" />
+    </td>
+    <td align="center" valign="top">
+      <strong>Marked list</strong><br />
+      <img src="assets/screenshots/read-marks.png" alt="Marked verses list" width="240" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
+      <strong>Marked verse</strong><br />
+      <img src="assets/screenshots/read-marked-verse.png" alt="Verse with mark icon active" width="240" />
+    </td>
+  </tr>
+</table>
+
 ## Features
 
 - **Quiet reflection flow** — mahamantra → purification pause → silent question → five three-verse passages → wait-and-ponder cue.
-- **Read the Gita** — purification pause → remember Krishna → one verse per page with chapter picker, prev/next, bookmarks, and resume. Open from the book icon in the top bar or go to [`pages/read.html`](pages/read.html).
+- **Read the Gita** — purification pause → remember Krishna → verse index (marked verses at top) → one verse per page with prev/next and a mark toggle. Open from the book icon in the top bar or go to [`pages/read.html`](pages/read.html).
 - **Save as PNG** — any single reflection passage or the whole session, rendered in-browser to themed cards.
 - **Multilingual** — UI strings and verse translations are lazy-loaded per language; ships with Sanskrit, Hindi, and English.
 - **Four themes** — Vedic Light/Dark and Modern Light/Dark; respects `prefers-color-scheme`.
@@ -72,8 +97,8 @@ Reflect: Begin → Purify → Hold → Receive → Save or wait.
 
 1. Open from the book icon or [`pages/read.html`](pages/read.html).
 2. Purification pause, then remember Lord Krishna.
-3. Read one verse at a time with Sanskrit and translation.
-4. Bookmark verses (marked icon) and resume from your last position.
+3. Choose a verse from the index — marked verses appear at the top — or continue where you left off.
+4. Read one verse at a time; save it as a PNG card, mark it, or return to the index.
 
 ## Run locally
 

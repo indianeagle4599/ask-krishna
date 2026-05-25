@@ -85,7 +85,7 @@
     return control;
   };
 
-  AK.pager = function ({ onPrev, onNext, center, prevDisabled, nextDisabled }) {
+  AK.pager = function ({ onPrev, onNext, center, leading, prevDisabled, nextDisabled }) {
     const nav = document.createElement("nav");
     nav.className = "pager";
     const prev = AK.button("←", onPrev, "arrow");
@@ -94,9 +94,17 @@
     next.disabled = !!nextDisabled;
     const actions = document.createElement("div");
     actions.className = "card-actions";
+    if (leading) actions.append(leading);
     if (center) actions.append(center);
     nav.append(prev, actions, next);
     return nav;
+  };
+
+  AK.indexButton = function (onOpen) {
+    const btn = AK.button("", onOpen, "icon-button index-button");
+    btn.append(AK.maskIcon("index"));
+    btn.setAttribute("aria-label", AK.text("labels.verseIndex"));
+    return btn;
   };
 
   AK.bookmarkButton = function (bookmarked, onToggle) {
@@ -105,6 +113,45 @@
     btn.setAttribute("aria-label", AK.text(bookmarked ? "labels.bookmarked" : "labels.bookmark"));
     btn.setAttribute("aria-pressed", String(bookmarked));
     return btn;
+  };
+
+  AK.chapterNav = function ({ chapters, value, onChange }) {
+    let current = value;
+    const first = chapters[0];
+    const last = chapters[chapters.length - 1];
+    const nav = document.createElement("nav");
+    nav.className = "chapter-nav";
+
+    const select = document.createElement("select");
+    select.className = "chapter-select";
+    select.setAttribute("aria-label", AK.text("labels.chapter"));
+    chapters.forEach((chapter) => {
+      const option = document.createElement("option");
+      option.value = chapter;
+      option.textContent = `${AK.text("labels.chapter")} ${chapter}`;
+      select.append(option);
+    });
+
+    const prev = AK.button("←", () => apply(current - 1), "arrow chapter-arrow");
+    const next = AK.button("→", () => apply(current + 1), "arrow chapter-arrow");
+
+    const sync = () => {
+      select.value = String(current);
+      prev.disabled = current <= first;
+      next.disabled = current >= last;
+    };
+
+    const apply = (chapter) => {
+      if (chapter < first || chapter > last) return;
+      current = chapter;
+      sync();
+      onChange(chapter);
+    };
+
+    select.addEventListener("change", () => apply(Number(select.value)));
+    sync();
+    nav.append(prev, select, next);
+    return nav;
   };
 
   AK.systemTheme = function () {
@@ -272,6 +319,7 @@
     onAction,
     pauseKey = "pauseReady",
     actionKey = "actionReady",
+    sideLink,
   }) {
     AK.clearTimer();
     const content = document.createElement("section");
@@ -284,9 +332,17 @@
     );
     const pulse = document.createElement("i");
     pulse.className = "pulse";
+    let side = null;
+    if (sideLink) {
+      side = document.createElement("a");
+      side.href = sideLink.href;
+      side.className = "side-link";
+      side.textContent = sideLink.label;
+      side.hidden = !session[pauseKey];
+    }
     const action = AK.button(actionLabel, onAction, "text-button reveal");
     if (session[actionKey]) action.classList.add("show");
-    content.append(verse, pulse, action);
+    content.append(verse, pulse, ...(side ? [side] : []), action);
     AK.pageFrame(content);
 
     if (session[actionKey]) return;
@@ -302,6 +358,7 @@
     AK.timer = setTimeout(() => {
       saveSession({ ...getSession(), [pauseKey]: true });
       verse.replaceChildren(AK.block("mantra", AK.text(secondMessageKey)));
+      if (side) side.hidden = false;
       AK.timer = setTimeout(() => {
         saveSession({ ...getSession(), [pauseKey]: true, [actionKey]: true });
         action.classList.add("show");

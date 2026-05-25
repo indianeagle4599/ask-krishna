@@ -6,6 +6,7 @@
   const READ_BOOKMARKS = "askKrishna.readBookmarks";
   const READ_COOKIE = "ak_read";
   const READ_PURIFY = "askKrishna.readPurify";
+  const VERSE_HASH = /^\d+\.\d+$/;
 
   AK.verseData = null;
   AK.readFocalId = "";
@@ -65,14 +66,13 @@
     return next.includes(id);
   };
 
-
   AK.verseById = function (id) {
     return AK.verseData?.find((verse) => verse.id === id);
   };
 
   AK.parseInitialReadId = function () {
     const hash = location.hash.replace(/^#/, "");
-    if (hash && AK.verseById(hash)) return hash;
+    if (hash && hash !== "index" && AK.verseById(hash)) return hash;
     const saved = AK.readProgress()?.verseId;
     if (saved && AK.verseById(saved)) return saved;
     const cookie = AK.getCookie(READ_COOKIE);
@@ -91,23 +91,73 @@
       actionKey: "readReady",
       onAction: () => {
         AK.saveReadPurify({ ...AK.readPurifySession(), readReady: true });
-        AK.readPhase = "read";
-        AK.openRead();
+        AK.openIndex();
       },
     });
   };
 
   AK.setReadFocal = function (id) {
     AK.saveReadProgress(id);
+    AK.readPhase = "read";
     AK.readView();
   };
 
   AK.readMove = function (step) {
     if (!AK.verseData?.length || !AK.readFocalId) return;
     const index = AK.verseData.findIndex((verse) => verse.id === AK.readFocalId);
-    const next = AK.verseData[index + step];
-    if (next) AK.setReadFocal(next.id);
+    const target = AK.verseData[index + step];
+    if (target) AK.setReadFocal(target.id);
   };
+
+  function readFail() {
+    AK.pageFrame(AK.block("save-status", AK.text("actions.saveError")));
+  }
+
+  function chapters() {
+    return [...new Set(AK.verseData.map((verse) => verse.chapter))];
+  }
+
+  function sortedMarks() {
+    const marks = AK.readBookmarks();
+    if (!marks.length || !AK.verseData) return [];
+    const order = new Map(AK.verseData.map((verse, index) => [verse.id, index]));
+    return marks
+      .slice()
+      .sort((a, b) => (order.get(a) ?? 0) - (order.get(b) ?? 0))
+      .map((id) => AK.verseById(id))
+      .filter(Boolean);
+  }
+
+  function versePick(verse, label, marked = false) {
+    const btn = AK.button(label, () => AK.setReadFocal(verse.id), marked ? "index-verse marked" : "index-verse");
+    btn.setAttribute("aria-label", AK.verseRef(verse));
+    return btn;
+  }
+
+  function buildVerseGrid(chapter, marks) {
+    const grid = document.createElement("nav");
+    grid.className = "index-verse-grid";
+    grid.setAttribute("aria-label", `${AK.text("labels.chapter")} ${chapter}`);
+    AK.verseData.filter((verse) => verse.chapter === chapter).forEach((verse) => {
+      grid.append(versePick(verse, String(verse.verse), marks.has(verse.id)));
+    });
+    return grid;
+  }
+
+  function buildIndexPicker(openChapter, marks) {
+    const picker = document.createElement("div");
+    picker.className = "index-picker";
+    const gridHost = document.createElement("div");
+    gridHost.className = "index-verse-host";
+    const showChapter = (chapter) => gridHost.replaceChildren(buildVerseGrid(chapter, marks));
+
+    picker.append(
+      AK.chapterNav({ chapters: chapters(), value: openChapter, onChange: showChapter }),
+      gridHost,
+    );
+    showChapter(openChapter);
+    return picker;
+  }
 
   async function loadVerses() {
     if (AK.verseData) return AK.verseData;
@@ -115,91 +165,99 @@
     return AK.verseData;
   }
 
+  AK.readIndexView = async function () {
+    await loadVerses();
+    AK.readPhase = "index";
+    history.replaceState(null, "", `${location.pathname}${location.search}`);
+
+    const content = document.createElement("section");
+    content.className = "read-index";
+    const storedProgress = AK.readProgress()?.verseId;
+    const resume = storedProgress && AK.verseById(storedProgress);
+
+    if (resume) {
+      content.append(
+        AK.button(
+          AK.text("actions.continueReading").replace("{ref}", storedProgress),
+          () => AK.setReadFocal(storedProgress),
+          "text-button index-continue",
+        ),
+      );
+    }
+
+    const marks = new Set(AK.readBookmarks());
+    const marked = sortedMarks();
+    if (marked.length) {
+      const row = document.createElement("nav");
+      row.className = "mark-links";
+      marked.forEach((verse) => row.append(versePick(verse, AK.verseRef(verse), true)));
+      content.append(row);
+    }
+
+    content.append(buildIndexPicker(resume?.chapter || 1, marks));
+    AK.pageFrame(content);
+  };
+
   AK.readView = async function () {
     await loadVerses();
     if (!AK.readFocalId) AK.readFocalId = AK.parseInitialReadId();
 
-    const hash = location.hash.replace(/^#/, "");
-    const storedProgress = AK.readProgress()?.verseId;
     const focal = AK.verseById(AK.readFocalId) || AK.verseData[0];
     AK.readFocalId = focal.id;
+    AK.readPhase = "read";
     AK.saveReadProgress(AK.readFocalId);
 
     const translations = await AK.i18n.loadTranslations(AK.language());
     const entry = { mainId: focal.id, verses: [focal] };
     const content = document.createElement("section");
     content.className = "read-screen";
+    const status = AK.block("save-status", "");
+    const focalIndex = AK.verseData.findIndex((verse) => verse.id === focal.id);
+    const center = document.createDocumentFragment();
+    center.append(
+      AK.bookmarkButton(AK.readBookmarks().includes(focal.id), () => {
+        AK.toggleBookmark(focal.id);
+        AK.readView();
+      }),
+      AK.button(AK.text("actions.save"), () => AK.saveEntry(entry, translations, status), "text-button"),
+    );
 
-    if (!hash && storedProgress && !sessionStorage.getItem("askKrishna.readBanner")) {
-      const banner = document.createElement("div");
-      banner.className = "resume-banner";
-      banner.append(
-        AK.button(AK.text("actions.continueReading").replace("{ref}", storedProgress), () => {
-          sessionStorage.setItem("askKrishna.readBanner", "1");
-          AK.setReadFocal(storedProgress);
-        }, "text-button"),
-        AK.button(AK.text("actions.startOver"), () => {
-          sessionStorage.setItem("askKrishna.readBanner", "1");
-          AK.setReadFocal("1.1");
-        }, "text-button"),
-      );
-      content.append(banner);
-    }
-
-    const controls = document.createElement("div");
-    controls.className = "read-controls";
-    const chapterSelect = document.createElement("select");
-    chapterSelect.className = "chapter-select";
-    chapterSelect.setAttribute("aria-label", AK.text("labels.chapter"));
-    [...new Set(AK.verseData.map((verse) => verse.chapter))].forEach((chapter) => {
-      const option = document.createElement("option");
-      option.value = chapter;
-      option.textContent = `${AK.text("labels.chapter")} ${chapter}`;
-      option.selected = chapter === focal.chapter;
-      chapterSelect.append(option);
-    });
-    chapterSelect.addEventListener("change", () => {
-      const first = AK.verseData.find((verse) => verse.chapter === Number(chapterSelect.value));
-      if (first) AK.setReadFocal(first.id);
-    });
-
-    controls.append(chapterSelect, AK.block("ref", `${AK.text("labels.chapter")} ${focal.chapter} · ${focal.verse}`));
-
-    const bookmarked = AK.readBookmarks().includes(focal.id);
     const list = document.createElement("div");
     list.className = "passage";
     list.append(AK.renderCard(entry, translations));
 
-    const focalIndex = AK.verseData.findIndex((verse) => verse.id === focal.id);
     content.append(
-      controls,
+      AK.block("ref", `${AK.text("labels.chapter")} ${focal.chapter} · ${focal.verse}`),
       list,
       AK.pager({
         onPrev: () => AK.readMove(-1),
         onNext: () => AK.readMove(1),
-        center: AK.bookmarkButton(bookmarked, () => {
-          AK.toggleBookmark(focal.id);
-          AK.readView();
-        }),
+        leading: AK.indexButton(() => AK.openIndex()),
+        center,
         prevDisabled: focalIndex <= 0,
         nextDisabled: focalIndex >= AK.verseData.length - 1,
       }),
+      status,
     );
     AK.pageFrame(content);
   };
 
+  AK.openIndex = function () {
+    AK.readIndexView().catch(readFail);
+  };
+
   AK.openRead = function () {
-    AK.readView().catch(() => {
-      const status = AK.block("save-status", AK.text("actions.saveError"));
-      AK.pageFrame(status);
-    });
+    AK.readPhase = "read";
+    AK.readView().catch(readFail);
   };
 
   AK.readScreens = function () {
-    if (AK.readPurifySession().readReady) AK.readPhase = "read";
-    if (AK.readPhase !== "read") return AK.readPurify();
-    AK.readView().catch(() => {
-      AK.pageFrame(AK.block("save-status", AK.text("actions.saveError")));
-    });
+    if (AK.readPurifySession().readReady) {
+      const hash = location.hash.replace(/^#/, "");
+      AK.readPhase = hash && hash !== "index" && VERSE_HASH.test(hash) ? "read" : "index";
+    }
+    if (AK.readPhase === "purify") return AK.readPurify();
+    if (AK.readPhase === "index") return AK.openIndex();
+    return AK.openRead();
   };
 })();

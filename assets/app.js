@@ -11,7 +11,6 @@
     location.replace(AK.root || "./");
     return;
   }
-
   AK.render = function () {
     AK.setTheme(localStorage.getItem(AK.THEME), false);
     document.documentElement.lang = AK.manifest[AK.language()].htmlLang;
@@ -27,9 +26,8 @@
   document.addEventListener("keydown", (event) => {
     if (event.key === "Enter" && AK.page === "index" && !event.target.closest("button,a")) AK.go("reflect");
     if (event.key === "Enter" && AK.page === "reflect" && AK.session?.receiveReady && !event.target.closest("button,a")) AK.go("passage");
-    if (event.key === "Enter" && isReadPage && AK.readPhase !== "read" && AK.readPurifySession?.().readReady && !event.target.closest("button,a")) {
-      AK.readPhase = "read";
-      AK.openRead();
+    if (event.key === "Enter" && isReadPage && AK.readPhase === "purify" && AK.readPurifySession?.().readReady && !event.target.closest("button,a")) {
+      AK.openIndex();
     }
     if (event.key === "ArrowLeft" && AK.page === "passage") AK.movePassage(-1);
     if (event.key === "ArrowRight" && AK.page === "passage") AK.movePassage(1);

@@ -91,6 +91,11 @@ button:disabled {
   mask-image: url("book-icon.svg");
 }
 
+.ui-icon--index {
+  -webkit-mask-image: url("index-icon.svg");
+  mask-image: url("index-icon.svg");
+}
+
 .ui-icon--bookmark {
   -webkit-mask-image: url("bookmark-icon.svg");
   mask-image: url("bookmark-icon.svg");
@@ -107,12 +112,40 @@ button:disabled {
   gap: 1.25rem;
 }
 
-.read-controls {
+.read-index {
+  display: grid;
+  gap: 1rem;
+}
+
+.index-continue {
+  align-self: center;
+}
+
+.mark-links {
   display: flex;
   flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  justify-content: center;
+}
+
+.index-picker {
+  display: grid;
+  gap: 1.25rem;
+  justify-items: center;
+}
+
+.chapter-nav {
+  display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.chapter-arrow {
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.1rem;
 }
 
 .chapter-select {
@@ -124,17 +157,32 @@ button:disabled {
   font: inherit;
 }
 
-.resume-banner {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.65rem 0.75rem;
-  border: 1px solid var(--subtle);
-  border-radius: 0.35rem;
-  background: var(--surface);
+.index-verse-host {
+  width: 100%;
 }
 
+.index-verse-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.7rem;
+  justify-content: center;
+}
+
+.index-verse {
+  min-width: 0;
+  padding: 0.1rem 0.25rem;
+  border: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.index-verse.marked {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.index-button,
 .bookmark-button {
   display: inline-flex;
   align-items: center;
@@ -248,6 +296,17 @@ button:disabled {
 .reveal.show {
   opacity: 1;
   pointer-events: auto;
+}
+
+.side-link {
+  color: var(--muted);
+  font-size: 0.88rem;
+  text-decoration: none;
+}
+
+.side-link:hover,
+.side-link:focus-visible {
+  color: var(--text);
 }
 
 @keyframes pulse {

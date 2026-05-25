@@ -49,6 +49,7 @@
       pauseKey: "holdReady",
       actionKey: "receiveReady",
       onAction: () => AK.go("passage"),
+      sideLink: { href: AK.readLinkUrl(), label: AK.text("labels.readGita") },
     });
   };
 
@@ -76,7 +77,7 @@
     const list = document.createElement("div");
     const index = data.index || 0;
     const count = AK.block("ref page-count", `${index + 1}/${data.passages.length}`);
-    const saveBtn = AK.button(AK.text("actions.save"), () => AK.savePassage(entry, status, translations), "text-button");
+    const saveBtn = AK.button(AK.text("actions.save"), () => AK.saveEntry(entry, translations, status), "text-button");
 
     list.className = "passage";
     list.append(AK.renderCard(entry, translations));
@@ -117,11 +118,6 @@
     );
     content.append(AK.block("wait-note", AK.text("messages.wait")), AK.block("muted ponder-line", AK.text("messages.ponder")), actions, status);
     AK.pageFrame(content);
-  };
-
-  AK.savePassage = async function (entry, status, translations) {
-    const ok = await AK.download(entry, translations);
-    status.textContent = AK.text(ok ? "actions.saved" : "actions.saveError");
   };
 
   AK.saveAllPassages = async function (status) {

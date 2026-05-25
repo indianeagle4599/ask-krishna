@@ -4,13 +4,14 @@
   const AK = window.ASK_KRISHNA;
 
   AK.ref = function (verses) {
-    if (verses.length === 1) {
-      const verse = verses[0];
-      return `${AK.text("reference")} ${verse.chapter}.${verse.verse}`;
-    }
+    if (verses.length === 1) return `${AK.text("reference")} ${AK.verseRef(verses[0])}`;
     const first = verses[0];
     const last = verses[verses.length - 1];
-    return `${AK.text("reference")} ${first.chapter}.${first.verse}-${last.chapter}.${last.verse}`;
+    return `${AK.text("reference")} ${AK.verseRef(first)}-${AK.verseRef(last)}`;
+  };
+
+  AK.verseRef = function (verse) {
+    return `${verse.chapter}.${verse.verse}`;
   };
 
   AK.passageFor = function (data, main) {
