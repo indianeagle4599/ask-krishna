@@ -5,13 +5,16 @@
 
 > Speak to Krishna, in silence.
 
-Ask Krishna is a serverless, local-first Bhagavad Gita reflection page. A user begins from the Hare Krishna mahamantra, sits through a short purification pause, holds a question silently, and receives five three-verse passages one at a time.
+Ask Krishna is a serverless, local-first Bhagavad Gita app with two quiet flows:
 
-It is designed as one clean webpage: no backend, no account system, no sync, no build step. Theme, language preference, and the active reflection session live in `localStorage`. Verse text and UI strings load from static JSON files on demand.
+1. **Reflect** — begin from the Hare Krishna mahamantra, sit through a purification pause, hold a question silently, and receive five three-verse passages one at a time.
+2. **Read Gita** — browse all 700 verses one at a time, with Sanskrit text, translations, bookmarks, and resume where you left off.
+
+It is designed as clean static pages: no backend, no account system, no sync, no build step. Theme and language preferences live in `localStorage`. Verse text and UI strings load from static JSON on demand.
 
 ## Screenshots
 
-Begin → Purify → Reflect → Receive → Save or wait.
+Reflect: Begin → Purify → Hold → Receive → Save or wait.
 
 <table>
   <tr>
@@ -46,19 +49,29 @@ Begin → Purify → Reflect → Receive → Save or wait.
 
 ## Features
 
-- **Quiet flow** — mahamantra → short purification pause → silent question → five three-verse passages → wait-and-ponder cue.
-- **Save as PNG** — any single passage or the whole session, rendered in-browser to themed cards.
+- **Quiet reflection flow** — mahamantra → purification pause → silent question → five three-verse passages → wait-and-ponder cue.
+- **Read the Gita** — purification pause → remember Krishna → one verse per page with chapter picker, prev/next, bookmarks, and resume. Open from the book icon in the top bar or go to [`pages/read.html`](pages/read.html).
+- **Save as PNG** — any single reflection passage or the whole session, rendered in-browser to themed cards.
 - **Multilingual** — UI strings and verse translations are lazy-loaded per language; ships with Sanskrit, Hindi, and English.
 - **Four themes** — Vedic Light/Dark and Modern Light/Dark; respects `prefers-color-scheme`.
-- **Fully static, local-first** — plain HTML, CSS, vanilla JS. `localStorage` for state. No backend, framework, bundler, accounts, sync, or telemetry.
+- **Fully static, local-first** — plain HTML, CSS, vanilla JS. `localStorage` and `sessionStorage` for state. No backend, framework, bundler, accounts, or sync.
 
-## Flow
+## Flows
+
+### Reflect (home)
 
 1. Begin.
 2. Sit through a short purification pause.
 3. Hold a question silently.
 4. Browse five three-verse Bhagavad Gita passages one at a time.
 5. Save the passage that feels like the answer as a PNG card, or move past the last passage for a wait-and-ponder cue.
+
+### Read Gita
+
+1. Open from the book icon or [`pages/read.html`](pages/read.html).
+2. Purification pause, then remember Lord Krishna.
+3. Read one verse at a time with Sanskrit and translation.
+4. Bookmark verses (marked icon) and resume from your last position.
 
 ## Run locally
 
@@ -72,11 +85,11 @@ Then open `http://localhost:8000`.
 
 There is no backend, database, framework, package install, or build step.
 
-Theme and language settings are saved in `localStorage`. Reloading an inner page or clicking the top-left title returns to the starting screen.
+Theme and language settings are saved in `localStorage`. Clicking the top-left title returns home from Read Gita, or resets the reflection flow on the home page.
 
 UI strings live as one JSON file per language under `assets/locales/<code>.json`. `assets/i18n.js` is a small manifest plus a lazy loader, so adding a language is one new locale file plus one manifest line.
 
-Saved passages are rendered in-browser as PNG cards; no image service or build step is used.
+Saved reflection passages are rendered in-browser as PNG cards; no image service or build step is used.
 
 ## Data
 

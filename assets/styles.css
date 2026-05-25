@@ -69,6 +69,93 @@ button:disabled {
   gap: 0.15rem;
 }
 
+.read-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.ui-icon {
+  display: inline-block;
+  width: 1.15rem;
+  height: 1.15rem;
+  background-color: currentColor;
+  -webkit-mask: no-repeat center / contain;
+  mask: no-repeat center / contain;
+}
+
+.ui-icon--book {
+  -webkit-mask-image: url("book-icon.svg");
+  mask-image: url("book-icon.svg");
+}
+
+.ui-icon--bookmark {
+  -webkit-mask-image: url("bookmark-icon.svg");
+  mask-image: url("bookmark-icon.svg");
+}
+
+.lang-toggle {
+  min-width: 2rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.02em;
+}
+
+.read-screen {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.read-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.chapter-select {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid var(--subtle);
+  border-radius: 0.25rem;
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+}
+
+.resume-banner {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border: 1px solid var(--subtle);
+  border-radius: 0.35rem;
+  background: var(--surface);
+}
+
+.bookmark-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  min-height: 2rem;
+  color: var(--muted);
+}
+
+.bookmark-button[aria-pressed="true"] {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.bookmark-button[aria-pressed="true"] .ui-icon--bookmark {
+  width: 1.25rem;
+  height: 1.25rem;
+  -webkit-mask-image: url("bookmark-icon-filled.svg");
+  mask-image: url("bookmark-icon-filled.svg");
+}
+
 .setting {
   position: relative;
 }
@@ -101,10 +188,15 @@ button:disabled {
   display: flex;
 }
 
+.menu.swatches {
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+}
+
 .swatch {
   width: 1rem;
   height: 1rem;
-  margin-top: 0.5rem;
   border: 1px solid var(--muted);
   border-radius: 0.15rem;
   background: linear-gradient(135deg, var(--swatch-bg) 50%, var(--swatch-fg) 50%);
@@ -204,10 +296,38 @@ button:disabled {
   border-top: 1px solid var(--subtle);
 }
 
+.passage-card.triad .translation-set {
+  margin-top: 0.5rem;
+  padding-top: 1.5rem;
+  border-top-width: 2px;
+  border-top-color: var(--muted);
+}
+
 .sanskrit-line.main,
 .translation-line.main {
   padding: 0.35rem 0.5rem;
   border-block: 1px solid var(--subtle);
+}
+
+.passage-card.triad .sanskrit-line:not(.main),
+.passage-card.triad .translation-line:not(.main) {
+  opacity: 0.62;
+}
+
+.passage-card.triad .sanskrit-line.main {
+  padding: 0.55rem 0.65rem;
+  border-block-width: 2px;
+  border-block-color: var(--muted);
+  color: var(--text);
+  font-size: clamp(1rem, 3.6vw, 1.22rem);
+}
+
+.passage-card.triad .translation-line.main {
+  padding: 0.55rem 0.65rem;
+  border-block-width: 2px;
+  border-block-color: var(--muted);
+  font-size: clamp(1.28rem, 4.8vw, 1.75rem);
+  font-weight: 500;
 }
 
 .ref,

@@ -8,10 +8,18 @@
   <script>document.documentElement.dataset.theme = localStorage.getItem("askKrishna.theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "vedic-dark" : "vedic-light");</script>
   <link rel="stylesheet" href="assets/themes.css">
   <link rel="stylesheet" href="assets/styles.css">
-  <script src="assets/i18n.js"></script>
+  <script src="assets/i18n.js" defer></script>
+  <script src="assets/core.js" defer></script>
+  <script src="assets/cards.js" defer></script>
+  <script src="assets/export.js" defer></script>
+  <script src="assets/reflect.js" defer></script>
   <script src="assets/app.js" defer></script>
 </head>
 <body data-page="index">
+  <noscript>
+    <p>Ask Krishna is a quiet Bhagavad Gita reflection page. Begin from the Hare Krishna mahamantra, hold a question silently, and receive five three-verse passages for contemplation.</p>
+    <p><a href="pages/read.html">Read the Bhagavad Gita</a> — browse all verses with Sanskrit text and translations, one verse at a time.</p>
+  </noscript>
   <main class="screen" data-screen></main>
   <script data-goatcounter="https://hitesh-krishna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
