@@ -298,17 +298,6 @@ button:disabled {
   pointer-events: auto;
 }
 
-.side-link {
-  color: var(--muted);
-  font-size: 0.88rem;
-  text-decoration: none;
-}
-
-.side-link:hover,
-.side-link:focus-visible {
-  color: var(--text);
-}
-
 @keyframes pulse {
   0%,
   100% {
@@ -355,17 +344,16 @@ button:disabled {
   border-top: 1px solid var(--subtle);
 }
 
-.passage-card.triad .translation-set {
-  margin-top: 0.5rem;
-  padding-top: 1.5rem;
-  border-top-width: 2px;
-  border-top-color: var(--muted);
-}
-
 .sanskrit-line.main,
 .translation-line.main {
   padding: 0.35rem 0.5rem;
   border-block: 1px solid var(--subtle);
+}
+
+.passage-card.triad .translation-set {
+  margin-top: 0.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px solid var(--muted);
 }
 
 .passage-card.triad .sanskrit-line:not(.main),
@@ -374,17 +362,11 @@ button:disabled {
 }
 
 .passage-card.triad .sanskrit-line.main {
-  padding: 0.55rem 0.65rem;
-  border-block-width: 2px;
-  border-block-color: var(--muted);
   color: var(--text);
   font-size: clamp(1rem, 3.6vw, 1.22rem);
 }
 
 .passage-card.triad .translation-line.main {
-  padding: 0.55rem 0.65rem;
-  border-block-width: 2px;
-  border-block-color: var(--muted);
   font-size: clamp(1.28rem, 4.8vw, 1.75rem);
   font-weight: 500;
 }

@@ -17,7 +17,7 @@
     "readGita": "भगवद्गीतां पठतु",
     "chapter": "अध्यायः",
     "verseIndex": "श्लोकसूची",
-    "bookmark": "इमं श्लोकं चिह्नीकरोतु",
+    "bookmark": "चिह्नीकरोतु",
     "bookmarked": "चिह्नितम्"
   },
   "themes": {
@@ -36,7 +36,9 @@
     "saveAll": "सर्वं रक्ष्यताम्",
     "saveError": "रक्षणं न शक्तम्। पुनः प्रयत्नं करोतु।",
     "continueReading": "{ref} तः अनुवर्तताम्",
-    "startOver": "आदितः पठतु"
+    "startOver": "आदितः पठतु",
+    "readVerse": "गीतायां पठतु",
+    "backToAnswer": "उत्तरं प्रति"
   },
   "messages": {
     "hold": "स्वप्रश्नं मौनेन धारयतु।",

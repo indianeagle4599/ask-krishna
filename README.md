@@ -16,61 +16,85 @@ It is designed as clean static pages: no backend, no account system, no sync, no
 
 ## Screenshots
 
-Reflect: Begin → Purify → Hold → Receive → Save or wait.
+Full-page captures at 1280×960. Theme and language vary by screen; assignments live in `assets/screenshots/capture-plan.json` (random on first run, then stable). Regenerate:
+
+```sh
+python3 -m http.server 8000
+npm install playwright --no-save
+node scripts/capture-screenshots.mjs
+```
+
+Reflect: Begin → settings → Purify → Hold → Passage → Save or wait.
 
 <table>
   <tr>
     <td align="center" valign="top">
       <strong>Start</strong><br />
-      <img src="assets/screenshots/home.png" alt="Start screen" width="240" />
+      <img src="assets/screenshots/home.png" alt="Start screen" width="280" />
     </td>
     <td align="center" valign="top">
-      <strong>Purification</strong><br />
-      <img src="assets/screenshots/purification.png" alt="Purification pause" width="240" />
+      <strong>Theme picker</strong><br />
+      <img src="assets/screenshots/settings-theme.png" alt="Theme swatch menu open" width="280" />
     </td>
     <td align="center" valign="top">
-      <strong>Reflect</strong><br />
-      <img src="assets/screenshots/reflect.png" alt="Silent reflection screen" width="240" />
+      <strong>Language picker</strong><br />
+      <img src="assets/screenshots/settings-language.png" alt="Language menu open" width="280" />
     </td>
   </tr>
   <tr>
     <td align="center" valign="top">
-      <strong>Passage</strong><br />
-      <img src="assets/screenshots/passage.png" alt="Three-verse passage screen" width="240" />
+      <strong>Purification</strong><br />
+      <img src="assets/screenshots/purification.png" alt="Purification pause" width="280" />
     </td>
     <td align="center" valign="top">
+      <strong>Hold · Vedic Dark · English</strong><br />
+      <img src="assets/screenshots/reflect.png" alt="Hold your question silently" width="280" />
+    </td>
+    <td align="center" valign="top">
+      <strong>Passage · Vedic Light</strong><br />
+      <img src="assets/screenshots/passage.png" alt="Passage with Read in Gita and Save" width="280" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center" valign="top">
       <strong>Wait</strong><br />
-      <img src="assets/screenshots/wait.png" alt="Wait and ponder screen" width="240" />
+      <img src="assets/screenshots/wait.png" alt="Wait and ponder" width="280" />
     </td>
-    <td align="center">
-      <strong>Saved PNG</strong><br />
-      <img src="assets/screenshots/example-save.png" alt="Saved shloka PNG card" height="129" />
+    <td align="center" valign="top">
+      <strong>Saved PNG · Modern Light</strong><br />
+      <img src="assets/screenshots/example-save.png" alt="Exported passage card" height="210" />
     </td>
+    <td></td>
   </tr>
 </table>
 
-Read Gita: verse index (with marks), reader.
+Read Gita: verse index, reader, marks.
 
 <table>
   <tr>
     <td align="center" valign="top">
+      <strong>Verse index · Modern Dark</strong><br />
+      <img src="assets/screenshots/read-index.png" alt="Verse index with chapter picker" width="280" />
+    </td>
+    <td align="center" valign="top">
       <strong>Reader</strong><br />
-      <img src="assets/screenshots/read-reader.png" alt="Read Gita verse screen" width="240" />
+      <img src="assets/screenshots/read-reader.png" alt="Single verse reader" width="280" />
     </td>
     <td align="center" valign="top">
-      <strong>Verse index</strong><br />
-      <img src="assets/screenshots/read-index.png" alt="Chapter and verse index" width="240" />
-    </td>
-    <td align="center" valign="top">
-      <strong>Marked list</strong><br />
-      <img src="assets/screenshots/read-marks.png" alt="Marked verses list" width="240" />
+      <strong>Marked verse · Hindi</strong><br />
+      <img src="assets/screenshots/read-marked-verse.png" alt="Reader with mark active" width="280" />
     </td>
   </tr>
   <tr>
     <td align="center" valign="top">
-      <strong>Marked verse</strong><br />
-      <img src="assets/screenshots/read-marked-verse.png" alt="Verse with mark icon active" width="240" />
+      <strong>Index with marks · Sanskrit UI</strong><br />
+      <img src="assets/screenshots/read-marks.png" alt="Index with marked verses at top" width="280" />
     </td>
+    <td align="center" valign="top">
+      <strong>Saved PNG</strong><br />
+      <img src="assets/screenshots/read-save.png" alt="Exported verse card from Read Gita" height="210" />
+    </td>
+    <td></td>
   </tr>
 </table>
 

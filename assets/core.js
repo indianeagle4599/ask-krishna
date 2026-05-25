@@ -23,14 +23,31 @@
     return AK.root || "./";
   };
 
-  AK.readLinkUrl = function () {
-    let saved;
-    try {
-      saved = JSON.parse(localStorage.getItem("askKrishna.readProgress"))?.verseId;
-    } catch (_error) {
-      saved = null;
-    }
-    return `${AK.root}pages/read.html${saved ? `#${saved}` : ""}`;
+  AK.readLinkUrl = function (verseId) {
+    const id = verseId || (() => {
+      try {
+        return JSON.parse(localStorage.getItem("askKrishna.readProgress"))?.verseId;
+      } catch (_error) {
+        return null;
+      }
+    })();
+    return `${AK.root}pages/read.html${id ? `#${id}` : ""}`;
+  };
+
+  AK.hasReflectReturn = function () {
+    return sessionStorage.getItem("askKrishna.reflectReturn") === "1";
+  };
+
+  AK.openReadVerse = function (verseId) {
+    sessionStorage.setItem("askKrishna.reflectReturnPending", "1");
+    sessionStorage.setItem("askKrishna.readPurify", JSON.stringify({ rememberReady: true, readReady: true }));
+    location.href = AK.readLinkUrl(verseId);
+  };
+
+  AK.returnToReflect = function () {
+    sessionStorage.removeItem("askKrishna.reflectReturn");
+    sessionStorage.setItem("askKrishna.openPassage", "1");
+    location.href = AK.homeUrl();
   };
 
   AK.i18n = window.ASK_KRISHNA_I18N;
@@ -319,7 +336,6 @@
     onAction,
     pauseKey = "pauseReady",
     actionKey = "actionReady",
-    sideLink,
   }) {
     AK.clearTimer();
     const content = document.createElement("section");
@@ -332,17 +348,9 @@
     );
     const pulse = document.createElement("i");
     pulse.className = "pulse";
-    let side = null;
-    if (sideLink) {
-      side = document.createElement("a");
-      side.href = sideLink.href;
-      side.className = "side-link";
-      side.textContent = sideLink.label;
-      side.hidden = !session[pauseKey];
-    }
     const action = AK.button(actionLabel, onAction, "text-button reveal");
     if (session[actionKey]) action.classList.add("show");
-    content.append(verse, pulse, ...(side ? [side] : []), action);
+    content.append(verse, pulse, action);
     AK.pageFrame(content);
 
     if (session[actionKey]) return;
@@ -358,7 +366,6 @@
     AK.timer = setTimeout(() => {
       saveSession({ ...getSession(), [pauseKey]: true });
       verse.replaceChildren(AK.block("mantra", AK.text(secondMessageKey)));
-      if (side) side.hidden = false;
       AK.timer = setTimeout(() => {
         saveSession({ ...getSession(), [pauseKey]: true, [actionKey]: true });
         action.classList.add("show");

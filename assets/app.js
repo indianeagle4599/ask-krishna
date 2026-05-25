@@ -5,8 +5,21 @@
   AK.page = document.body.dataset.page;
   AK.screen = AK.$("[data-screen]");
   const isReadPage = AK.page === "read" && location.pathname.includes("/pages/read");
+  const isIndexSpa = !location.pathname.includes("/pages/");
 
-  if (AK.page !== "index" && !isReadPage) {
+  if (isIndexSpa) {
+    if (sessionStorage.getItem("askKrishna.openPassage")) {
+      sessionStorage.removeItem("askKrishna.openPassage");
+      AK.page = "passage";
+      document.body.dataset.page = "passage";
+    } else {
+      sessionStorage.removeItem("askKrishna.reflectReturn");
+      sessionStorage.removeItem("askKrishna.reflectReturnPending");
+      sessionStorage.removeItem("askKrishna.readPurify");
+    }
+  }
+
+  if (!isIndexSpa && !isReadPage) {
     localStorage.removeItem("askKrishna.session");
     location.replace(AK.root || "./");
     return;

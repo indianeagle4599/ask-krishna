@@ -36,7 +36,9 @@
     "saveAll": "सब सहेजें",
     "saveError": "सहेज नहीं सका। कृपया पुनः प्रयास करें।",
     "continueReading": "{ref} से जारी रखें",
-    "startOver": "शुरुआत से पढ़ें"
+    "startOver": "शुरुआत से पढ़ें",
+    "readVerse": "गीता में पढ़ें",
+    "backToAnswer": "उत्तर पर लौटें"
   },
   "messages": {
     "hold": "अपना प्रश्न मन में रखें।",

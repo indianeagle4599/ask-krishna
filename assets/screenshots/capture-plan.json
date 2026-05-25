@@ -1,0 +1,63 @@
+{
+  "defaults": {
+    "theme": "vedic-light",
+    "language": "en"
+  },
+  "pages": {
+    "home": {
+      "theme": "vedic-light",
+      "language": "en"
+    },
+    "purification": {
+      "theme": "vedic-light",
+      "language": "en"
+    },
+    "reflect": {
+      "theme": "vedic-dark",
+      "language": "en"
+    },
+    "passage": {
+      "theme": "vedic-light",
+      "language": "en"
+    },
+    "wait": {
+      "theme": "vedic-light",
+      "language": "en"
+    },
+    "example-save": {
+      "theme": "modern-light",
+      "language": "en"
+    },
+    "read-index": {
+      "theme": "modern-dark",
+      "language": "en"
+    },
+    "read-reader": {
+      "theme": "vedic-light",
+      "language": "en"
+    },
+    "read-marked-verse": {
+      "theme": "vedic-light",
+      "language": "hi"
+    },
+    "read-marks": {
+      "theme": "vedic-light",
+      "language": "sa"
+    },
+    "read-save": {
+      "theme": "vedic-light",
+      "language": "en"
+    }
+  },
+  "themePages": {
+    "vedic-light": "passage",
+    "vedic-dark": "reflect",
+    "modern-light": "example-save",
+    "modern-dark": "read-index"
+  },
+  "languagePages": {
+    "en": "reflect",
+    "hi": "read-marked-verse",
+    "sa": "read-marks"
+  }
+}

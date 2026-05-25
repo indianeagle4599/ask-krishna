@@ -17,8 +17,8 @@
     "readGita": "Read the Bhagavad Gita",
     "chapter": "Chapter",
     "verseIndex": "Verse index",
-    "bookmark": "Bookmark this verse",
-    "bookmarked": "Bookmarked"
+    "bookmark": "Mark",
+    "bookmarked": "Marked"
   },
   "themes": {
     "vedic-light": "Vedic Light",
@@ -36,7 +36,9 @@
     "saveAll": "Save All",
     "saveError": "Couldn't save. Please try again.",
     "continueReading": "Continue at {ref}",
-    "startOver": "Start from beginning"
+    "startOver": "Start from beginning",
+    "readVerse": "Read in Gita",
+    "backToAnswer": "Back to answer"
   },
   "messages": {
     "hold": "Hold your question silently.",

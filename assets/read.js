@@ -13,13 +13,18 @@
   AK.readPhase = "purify";
 
   if (!window.__readBooted) {
-    sessionStorage.removeItem(READ_PURIFY);
-    AK.readPhase = "purify";
+    if (sessionStorage.getItem("askKrishna.reflectReturnPending") === "1") {
+      sessionStorage.removeItem("askKrishna.reflectReturnPending");
+      sessionStorage.setItem("askKrishna.reflectReturn", "1");
+    }
+    if (!AK.hasReflectReturn()) sessionStorage.removeItem(READ_PURIFY);
+    AK.readPhase = AK.hasReflectReturn() ? "read" : "purify";
     window.__readBooted = true;
   }
 
   AK.goHome = function (event) {
     if (event) event.preventDefault();
+    if (AK.hasReflectReturn()) return AK.returnToReflect();
     sessionStorage.removeItem(READ_PURIFY);
     location.href = AK.homeUrl();
   };
@@ -232,7 +237,9 @@
       AK.pager({
         onPrev: () => AK.readMove(-1),
         onNext: () => AK.readMove(1),
-        leading: AK.indexButton(() => AK.openIndex()),
+        leading: AK.hasReflectReturn()
+          ? AK.button(AK.text("actions.backToAnswer"), () => AK.returnToReflect(), "text-button")
+          : AK.indexButton(() => AK.openIndex()),
         center,
         prevDisabled: focalIndex <= 0,
         nextDisabled: focalIndex >= AK.verseData.length - 1,

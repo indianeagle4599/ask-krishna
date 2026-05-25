@@ -49,7 +49,6 @@
       pauseKey: "holdReady",
       actionKey: "receiveReady",
       onAction: () => AK.go("passage"),
-      sideLink: { href: AK.readLinkUrl(), label: AK.text("labels.readGita") },
     });
   };
 
@@ -78,6 +77,11 @@
     const index = data.index || 0;
     const count = AK.block("ref page-count", `${index + 1}/${data.passages.length}`);
     const saveBtn = AK.button(AK.text("actions.save"), () => AK.saveEntry(entry, translations, status), "text-button");
+    const center = document.createDocumentFragment();
+    center.append(
+      AK.button(AK.text("actions.readVerse"), () => AK.openReadVerse(entry.mainId), "text-button"),
+      saveBtn,
+    );
 
     list.className = "passage";
     list.append(AK.renderCard(entry, translations));
@@ -87,7 +91,7 @@
       AK.pager({
         onPrev: () => AK.movePassage(-1),
         onNext: () => AK.movePassage(1),
-        center: saveBtn,
+        center,
         prevDisabled: index === 0,
       }),
       status,
