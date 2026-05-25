@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hiteshgoyal.me/ask-krishna/sitemap.xml

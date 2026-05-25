@@ -5,6 +5,8 @@
 
 > Speak to Krishna, in silence.
 
+**Live site:** [hiteshgoyal.me/ask-krishna](https://hiteshgoyal.me/ask-krishna/) (GitHub Pages)
+
 Ask Krishna is a serverless, local-first Bhagavad Gita app with two quiet flows:
 
 1. **Reflect** — begin from the Hare Krishna mahamantra, sit through a purification pause, hold a question silently, and receive five three-verse passages one at a time.
@@ -90,6 +92,10 @@ Theme and language settings are saved in `localStorage`. Clicking the top-left t
 UI strings live as one JSON file per language under `assets/locales/<code>.json`. `assets/i18n.js` is a small manifest plus a lazy loader, so adding a language is one new locale file plus one manifest line.
 
 Saved reflection passages are rendered in-browser as PNG cards; no image service or build step is used.
+
+## Deploy
+
+Published via GitHub Pages at [https://hiteshgoyal.me/ask-krishna/](https://hiteshgoyal.me/ask-krishna/). SEO files (`robots.txt`, `sitemap.xml`, `llms.txt`) and canonical URLs point to that base path.
 
 ## Data
 
