@@ -215,6 +215,13 @@
     return el;
   };
 
+  AK.heading = function (level, className, value) {
+    const el = document.createElement(`h${level}`);
+    el.className = className;
+    el.textContent = value;
+    return el;
+  };
+
   AK.sacredBlock = function (key) {
     const wrap = document.createElement("div");
     const sa = AK.languages.sa;
@@ -229,6 +236,8 @@
     const bar = document.createElement("header");
     bar.className = "topbar";
 
+    const heading = document.createElement("h1");
+    heading.className = "brand-heading";
     const brand = document.createElement("a");
     brand.href = AK.homeUrl();
     brand.className = "brand";
@@ -237,6 +246,7 @@
     logo.setAttribute("aria-hidden", "true");
     brand.append(logo, document.createTextNode(AK.text("appName")));
     brand.addEventListener("click", AK.goHome);
+    heading.append(brand);
 
     const controls = document.createElement("div");
     controls.className = "settings";
@@ -282,14 +292,23 @@
       controls.append(themeControl, languageControl);
     }
 
-    bar.append(brand, controls);
+    bar.append(heading, controls);
     return bar;
   };
 
   AK.footer = function () {
     const el = document.createElement("footer");
     el.className = "site-footer";
-    el.textContent = AK.text("disclaimer");
+    const note = document.createElement("p");
+    note.textContent = AK.text("disclaimer");
+    const credit = document.createElement("p");
+    credit.className = "author-credit";
+    const link = document.createElement("a");
+    link.href = "https://hiteshgoyal.me";
+    link.rel = "author";
+    link.textContent = AK.text("authorName") || "Hitesh Goyal";
+    credit.append(link);
+    el.append(note, credit);
     return el;
   };
 

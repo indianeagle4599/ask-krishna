@@ -3,17 +3,18 @@
 > A quiet static Bhagavad Gita reflection and reading app.
 
 Live site: https://hiteshgoyal.me/ask-krishna/
+Author: Hitesh Goyal (https://hiteshgoyal.me)
 
 Ask Krishna is a fully static web app (plain HTML, CSS, vanilla JavaScript). No backend, no build step, no accounts.
 
 ## Pages
 
 - Home / reflection flow: `/` or `/index.html`
-- Read the Bhagavad Gita: `/pages/read.html` (700 verses, one verse at a time)
+- Read the Bhagavad Gita: `/pages/read.html` (701 verses in this edition, one verse at a time)
 
 ## Data (MIT-licensed; see NOTICE.md)
 
-- Verse structure and Sanskrit: `/data/verses.json` — array of 700 objects `{ "id": "chapter.verse", "chapter": N, "verse": N, "sanskrit": "..." }`
+- Verse structure and Sanskrit: `/data/verses.json` — array of 701 objects `{ "id": "chapter.verse", "chapter": N, "verse": N, "sanskrit": "..." }`
 - English translations: `/data/translations/en.json` — map `{ "1.1": "...", ... }`
 - Hindi translations: `/data/translations/hi.json` — same shape
 - UI strings per language: `/assets/locales/<code>.json` (codes: en, hi, sa)

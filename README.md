@@ -10,7 +10,7 @@
 Ask Krishna is a serverless, local-first Bhagavad Gita app with two quiet flows:
 
 1. **Reflect** — begin from the Hare Krishna mahamantra, sit through a purification pause, hold a question silently, and receive five three-verse passages one at a time.
-2. **Read Gita** — browse all 700 verses one at a time, with Sanskrit text, translations, marks, and resume where you left off.
+2. **Read Gita** — browse all 701 verses in this edition, one at a time, with Sanskrit text, translations, marks, and resume where you left off.
 
 It is designed as clean static pages: no backend, no account system, no sync, no build step. Theme and language preferences live in `localStorage`. Verse text and UI strings load from static JSON on demand.
 
@@ -144,7 +144,9 @@ Saved reflection passages are rendered in-browser as PNG cards; no image service
 
 ## Deploy
 
-Published via GitHub Pages at [https://hiteshgoyal.me/ask-krishna/](https://hiteshgoyal.me/ask-krishna/). SEO files (`robots.txt`, `sitemap.xml`, `llms.txt`) and canonical URLs point to that base path.
+Published via GitHub Pages at [https://hiteshgoyal.me/ask-krishna/](https://hiteshgoyal.me/ask-krishna/). Canonical URLs, `sitemap.xml`, and `llms.txt` use that base path.
+
+Crawlers read `robots.txt` only from the host root (`https://hiteshgoyal.me/robots.txt`). That file allows crawling and points at `https://hiteshgoyal.me/sitemap.xml`, which lists the project card `/projects/?slug=ask-krishna` and does not list this app. `https://hiteshgoyal.me/ask-krishna/robots.txt` is served, but crawlers do not apply a robots file from a sub-path. The app sitemap remains at `https://hiteshgoyal.me/ask-krishna/sitemap.xml` and lists the reflection page and the verse reader. The root sitemap needs those two URLs, or a line pointing at the app sitemap, before crawlers are told about them.
 
 ## Data
 

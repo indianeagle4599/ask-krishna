@@ -1,9 +1,12 @@
 {
   "appName": "Ask Krishna",
+  "authorName": "Hitesh Goyal",
   "reference": "Bhagavad Gita",
   "meta": {
-    "description": "A quiet static Bhagavad Gita reflection app. Begin from the Hare Krishna mahamantra, hold a question silently, and receive five three-verse passages for contemplation.",
-    "readDescription": "Read the Bhagavad Gita — browse all verses with Sanskrit text and translations, one verse at a time."
+    "title": "Ask Krishna — Bhagavad Gita reflection",
+    "readTitle": "Read the Bhagavad Gita — Ask Krishna",
+    "description": "Begin with the Hare Krishna mahamantra, hold a question in silence, and receive five three-verse Bhagavad Gita passages for contemplation.",
+    "readDescription": "Read the Bhagavad Gita one verse at a time, with Sanskrit text and translations."
   },
   "pageLabels": {
     "reflect": "Reflect",

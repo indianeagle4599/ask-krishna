@@ -39,7 +39,7 @@
       sanskrit.append(AK.line(verse, entry.mainId, "verse-text sanskrit-line", verse.sanskrit));
     });
 
-    card.append(AK.block("ref", AK.ref(entry.verses)), sanskrit);
+    card.append(AK.heading(2, "ref", AK.ref(entry.verses)), sanskrit);
     if (translations) {
       const translation = document.createElement("div");
       translation.className = "translation-set";

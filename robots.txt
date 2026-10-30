@@ -1,3 +1,11 @@
+# Crawlers only honor robots.txt at the host root:
+# https://hiteshgoyal.me/robots.txt
+# That file allows every user agent and declares:
+# Sitemap: https://hiteshgoyal.me/sitemap.xml
+# The root sitemap lists https://hiteshgoyal.me/projects/?slug=ask-krishna
+# and does not list the app URLs in this directory. This file is not applied.
+# The root sitemap should include the two URLs below, or this sitemap.
+
 User-agent: *
 Allow: /
 

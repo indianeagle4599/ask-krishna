@@ -54,6 +54,12 @@ button:disabled {
   text-decoration: none;
 }
 
+.brand-heading {
+  margin: 0;
+  font: inherit;
+  line-height: inherit;
+}
+
 .brand-logo {
   display: inline-block;
   width: 2rem;
@@ -377,6 +383,8 @@ button:disabled {
   margin: 0 0 0.6rem;
   color: var(--muted);
   font-size: 0.86rem;
+  font-weight: 400;
+  line-height: inherit;
 }
 
 .save-status {
@@ -441,4 +449,16 @@ button:disabled {
   font-size: 0.58rem;
   line-height: 1.45;
   text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+.author-credit {
+  margin-top: 0.45rem;
+}
+
+.author-credit a {
+  color: inherit;
 }
