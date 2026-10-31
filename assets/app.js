@@ -4,7 +4,9 @@
   const AK = window.ASK_KRISHNA;
   AK.page = document.body.dataset.page;
   AK.screen = AK.$("[data-screen]");
-  const isReadPage = AK.page === "read" && location.pathname.includes("/pages/read");
+  // A chapter page (pages/chapter-N.html) is the reader opened at that chapter.
+  const isChapterPage = AK.page === "read" && !!document.body.dataset.chapter;
+  const isReadPage = AK.page === "read" && (isChapterPage || location.pathname.includes("/pages/read"));
   const isIndexSpa = !location.pathname.includes("/pages/");
 
   if (isIndexSpa) {
@@ -28,8 +30,11 @@
     AK.setTheme(localStorage.getItem(AK.THEME), false);
     document.documentElement.lang = AK.manifest[AK.language()].htmlLang;
     const label = AK.text(`pageLabels.${AK.page}`);
-    document.title = label ? `${label} - ${AK.text("appName")}` : AK.text("appName");
-    AK.updateMetaDescription();
+    if (!isChapterPage) {
+      if (AK.page === "read") document.title = AK.text("meta.readTitle");
+      else document.title = label ? `${label} - ${AK.text("appName")}` : AK.text("meta.title");
+      AK.updateMetaDescription();
+    }
 
     if (isReadPage) return AK.readScreens();
     const screen = AK.reflectScreens?.[AK.page];
@@ -40,7 +45,7 @@
     if (event.key === "Enter" && AK.page === "index" && !event.target.closest("button,a")) AK.go("reflect");
     if (event.key === "Enter" && AK.page === "reflect" && AK.session?.receiveReady && !event.target.closest("button,a")) AK.go("passage");
     if (event.key === "Enter" && isReadPage && AK.readPhase === "purify" && AK.readPurifySession?.().readReady && !event.target.closest("button,a")) {
-      AK.openIndex();
+      AK.readAfterPurify();
     }
     if (event.key === "ArrowLeft" && AK.page === "passage") AK.movePassage(-1);
     if (event.key === "ArrowRight" && AK.page === "passage") AK.movePassage(1);

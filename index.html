@@ -3,42 +3,51 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ask Krishna</title>
-  <meta name="description" content="A quiet static Bhagavad Gita reflection app. Begin from the Hare Krishna mahamantra, hold a question silently, and receive five three-verse passages for contemplation.">
+  <title>Ask Krishna — Bhagavad Gita guidance for your question</title>
+  <meta name="description" content="Torn about a decision? Hold your question silently, begin with the Hare Krishna mahamantra, and open the Bhagavad Gita to a passage. Or read all 18 chapters.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://hiteshgoyal.me/ask-krishna/">
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Ask Krishna">
-  <meta property="og:description" content="A quiet static Bhagavad Gita reflection app. Begin from the Hare Krishna mahamantra, hold a question silently, and receive five three-verse passages for contemplation.">
+  <meta property="og:site_name" content="Ask Krishna">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="Ask Krishna — Bhagavad Gita guidance for your question">
+  <meta property="og:description" content="Torn about a decision? Hold your question silently, begin with the Hare Krishna mahamantra, and open the Bhagavad Gita to a passage. Or read all 18 chapters.">
   <meta property="og:url" content="https://hiteshgoyal.me/ask-krishna/">
-  <meta property="og:image" content="https://hiteshgoyal.me/ask-krishna/assets/ask-krishna-logo.svg">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:title" content="Ask Krishna">
-  <meta name="twitter:description" content="A quiet static Bhagavad Gita reflection app. Begin from the Hare Krishna mahamantra, hold a question silently, and receive five three-verse passages for contemplation.">
-  <meta name="twitter:image" content="https://hiteshgoyal.me/ask-krishna/assets/ask-krishna-logo.svg">
+  <meta property="og:image" content="https://hiteshgoyal.me/ask-krishna/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Ask Krishna logo, an open scripture on a lotus, with the words Bhagavad Gita reflection">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Ask Krishna — Bhagavad Gita guidance for your question">
+  <meta name="twitter:description" content="Torn about a decision? Hold your question silently, begin with the Hare Krishna mahamantra, and open the Bhagavad Gita to a passage. Or read all 18 chapters.">
+  <meta name="twitter:image" content="https://hiteshgoyal.me/ask-krishna/assets/og-image.png">
+  <meta name="twitter:image:alt" content="Ask Krishna logo, an open scripture on a lotus, with the words Bhagavad Gita reflection">
   <link rel="icon" type="image/svg+xml" href="assets/ask-krishna-logo.svg">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
+    "@type": "WebApplication",
+    "@id": "https://hiteshgoyal.me/ask-krishna/#app",
     "name": "Ask Krishna",
-    "description": "A quiet static Bhagavad Gita reflection app with multilingual verse reading.",
     "url": "https://hiteshgoyal.me/ask-krishna/",
-    "inLanguage": ["en", "hi", "sa"]
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Book",
-    "name": "Bhagavad Gita",
-    "numberOfPages": 700,
-    "inLanguage": ["sa", "hi", "en"],
-    "hasPart": {
-      "@type": "CreativeWork",
-      "name": "Verse dataset",
-      "url": "https://hiteshgoyal.me/ask-krishna/data/verses.json"
-    }
+    "image": "https://hiteshgoyal.me/ask-krishna/assets/og-image.png",
+    "description": "Torn about a decision? Hold your question silently, begin with the Hare Krishna mahamantra, and open the Bhagavad Gita to a passage. Or read all 18 chapters.",
+    "sameAs": ["https://github.com/indianeagle4599/ask-krishna"],
+    "applicationCategory": "ReferenceApplication",
+    "operatingSystem": "Any",
+    "browserRequirements": "Requires JavaScript",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "isAccessibleForFree": true,
+    "inLanguage": ["en", "hi", "sa"],
+    "featureList": [
+      "Hold a question silently and open the Bhagavad Gita to a passage, up to five",
+      "Read all 18 chapters one verse at a time",
+      "Sanskrit with English or Hindi meaning",
+      "Bookmarks and reading position saved on your device",
+      "Save a passage as an image"
+    ],
+    "about": { "@type": "Book", "name": "Bhagavad Gita" }
   }
   </script>
   <script>document.documentElement.dataset.theme = localStorage.getItem("askKrishna.theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "vedic-dark" : "vedic-light");</script>
@@ -53,8 +62,9 @@
 </head>
 <body data-page="index">
   <noscript>
-    <p>Ask Krishna is a quiet Bhagavad Gita reflection page. Begin from the Hare Krishna mahamantra, hold a question silently, and receive five three-verse passages for contemplation.</p>
-    <p><a href="pages/read.html">Read the Bhagavad Gita</a> — browse all verses with Sanskrit text and translations, one verse at a time.</p>
+    <h1>Ask Krishna</h1>
+    <p>Torn about a decision? Hold your question silently, begin with the Hare Krishna mahamantra, and open the Bhagavad Gita to a passage. Or read all 18 chapters.</p>
+    <p><a href="pages/read.html">Read the Bhagavad Gita</a></p>
   </noscript>
   <main class="screen" data-screen></main>
   <script data-goatcounter="https://hitesh-krishna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>

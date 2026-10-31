@@ -7,6 +7,7 @@
   const READ_COOKIE = "ak_read";
   const READ_PURIFY = "askKrishna.readPurify";
   const VERSE_HASH = /^\d+\.\d+$/;
+  const ANCHOR_HASH = /^(\d+)-(\d+)$/;
 
   AK.verseData = null;
   AK.readFocalId = "";
@@ -75,8 +76,37 @@
     return AK.verseData?.find((verse) => verse.id === id);
   };
 
-  AK.parseInitialReadId = function () {
+  // The verse a deep link points at: read.html#2.47, chapter-2.html#2-47 or
+  // chapter-2.html (its first verse). Empty for plain read.html.
+  AK.hashVerseId = function () {
     const hash = location.hash.replace(/^#/, "");
+    const anchor = hash.match(ANCHOR_HASH);
+    return anchor ? `${anchor[1]}.${anchor[2]}` : hash;
+  };
+
+  AK.readTargetId = function () {
+    const hash = AK.hashVerseId();
+    if (VERSE_HASH.test(hash) && AK.verseById(hash)) return hash;
+    const chapter = document.body.dataset.chapter;
+    if (chapter && AK.verseById(`${chapter}.1`)) return `${chapter}.1`;
+    return "";
+  };
+
+  // After purification: open the linked verse, or the index as before.
+  AK.readAfterPurify = async function () {
+    AK.saveReadPurify({ ...AK.readPurifySession(), readReady: true });
+    try {
+      await loadVerses();
+    } catch (_error) {
+      return readFail();
+    }
+    const target = AK.readTargetId();
+    if (target) AK.setReadFocal(target);
+    else AK.openIndex();
+  };
+
+  AK.parseInitialReadId = function () {
+    const hash = AK.hashVerseId();
     if (hash && hash !== "index" && AK.verseById(hash)) return hash;
     const saved = AK.readProgress()?.verseId;
     if (saved && AK.verseById(saved)) return saved;
@@ -94,10 +124,7 @@
       actionLabel: AK.text("actions.read"),
       pauseKey: "rememberReady",
       actionKey: "readReady",
-      onAction: () => {
-        AK.saveReadPurify({ ...AK.readPurifySession(), readReady: true });
-        AK.openIndex();
-      },
+      onAction: () => AK.readAfterPurify(),
     });
   };
 
@@ -260,7 +287,7 @@
 
   AK.readScreens = function () {
     if (AK.readPurifySession().readReady) {
-      const hash = location.hash.replace(/^#/, "");
+      const hash = AK.hashVerseId();
       AK.readPhase = hash && hash !== "index" && VERSE_HASH.test(hash) ? "read" : "index";
     }
     if (AK.readPhase === "purify") return AK.readPurify();

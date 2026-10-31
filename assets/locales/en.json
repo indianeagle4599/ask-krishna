@@ -2,8 +2,10 @@
   "appName": "Ask Krishna",
   "reference": "Bhagavad Gita",
   "meta": {
-    "description": "A quiet static Bhagavad Gita reflection app. Begin from the Hare Krishna mahamantra, hold a question silently, and receive five three-verse passages for contemplation.",
-    "readDescription": "Read the Bhagavad Gita — browse all verses with Sanskrit text and translations, one verse at a time."
+    "title": "Ask Krishna — Bhagavad Gita guidance for your question",
+    "readTitle": "Bhagavad Gita online: Sanskrit, English, Hindi | Ask Krishna",
+    "description": "Torn about a decision? Hold your question silently, begin with the Hare Krishna mahamantra, and open the Bhagavad Gita to a passage. Or read all 18 chapters.",
+    "readDescription": "Read all 18 chapters of the Bhagavad Gita online, one verse at a time: Sanskrit with English or Hindi meaning. Bookmark verses and pick up where you left off."
   },
   "pageLabels": {
     "reflect": "Reflect",

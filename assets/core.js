@@ -215,6 +215,13 @@
     return el;
   };
 
+  AK.heading = function (level, className, value) {
+    const el = document.createElement(`h${level}`);
+    el.className = className;
+    el.textContent = value;
+    return el;
+  };
+
   AK.sacredBlock = function (key) {
     const wrap = document.createElement("div");
     const sa = AK.languages.sa;
@@ -237,6 +244,10 @@
     logo.setAttribute("aria-hidden", "true");
     brand.append(logo, document.createTextNode(AK.text("appName")));
     brand.addEventListener("click", AK.goHome);
+    // Chapter pages carry their own h1 (the chapter title) in the kept chapter text.
+    const heading = document.createElement(document.querySelector("[data-chapter-text] h1") ? "div" : "h1");
+    heading.className = "brand-heading";
+    heading.append(brand);
 
     const controls = document.createElement("div");
     controls.className = "settings";
@@ -282,7 +293,7 @@
       controls.append(themeControl, languageControl);
     }
 
-    bar.append(brand, controls);
+    bar.append(heading, controls);
     return bar;
   };
 
@@ -303,7 +314,9 @@
         AK.screen.className = "screen";
         AK.screen.dataset.screen = "";
       }
-      document.body.replaceChildren(topbar, AK.screen, footer, ...(counter ? [counter] : []));
+      // Keep a chapter page's full text in the page (shown only without JavaScript).
+      const kept = [...document.querySelectorAll("[data-chapter-text]")];
+      document.body.replaceChildren(topbar, AK.screen, footer, ...kept, ...(counter ? [counter] : []));
       AK._shell = true;
     } else {
       document.querySelector(".topbar")?.replaceWith(topbar);
