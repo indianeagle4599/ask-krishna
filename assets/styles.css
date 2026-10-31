@@ -443,7 +443,12 @@ button:disabled {
   text-align: center;
 }
 
-.topbar h1 {
+.brand-heading {
+  display: flex;
   margin: 0;
   font: inherit;
+}
+
+h2.ref {
+  font-weight: 400;
 }

@@ -215,6 +215,13 @@
     return el;
   };
 
+  AK.heading = function (level, className, value) {
+    const el = document.createElement(`h${level}`);
+    el.className = className;
+    el.textContent = value;
+    return el;
+  };
+
   AK.sacredBlock = function (key) {
     const wrap = document.createElement("div");
     const sa = AK.languages.sa;
@@ -238,6 +245,7 @@
     brand.append(logo, document.createTextNode(AK.text("appName")));
     brand.addEventListener("click", AK.goHome);
     const heading = document.createElement("h1");
+    heading.className = "brand-heading";
     heading.append(brand);
 
     const controls = document.createElement("div");
@@ -291,11 +299,7 @@
   AK.footer = function () {
     const el = document.createElement("footer");
     el.className = "site-footer";
-    el.append(AK.block("", AK.text("projectDescription")), AK.block("", AK.text("disclaimer")));
-    const about = document.createElement("a");
-    about.href = "https://hiteshgoyal.me/projects/ask-krishna/";
-    about.textContent = AK.text("labels.aboutProject");
-    el.append(about);
+    el.textContent = AK.text("disclaimer");
     return el;
   };
 
