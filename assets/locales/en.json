@@ -3,7 +3,7 @@
   "reference": "Bhagavad Gita",
   "meta": {
     "description": "A quiet static Bhagavad Gita reflection app. Begin from the Hare Krishna mahamantra, hold a question silently, and receive five three-verse passages for contemplation.",
-    "readDescription": "Read the Bhagavad Gita — browse all verses with Sanskrit text and translations, one verse at a time."
+    "readDescription": "Read the Bhagavad Gita online, one verse at a time, with Sanskrit text and translations. All 18 chapters, no account needed."
   },
   "pageLabels": {
     "reflect": "Reflect",
@@ -18,7 +18,8 @@
     "chapter": "Chapter",
     "verseIndex": "Verse index",
     "bookmark": "Mark",
-    "bookmarked": "Marked"
+    "bookmarked": "Marked",
+    "aboutProject": "About this project"
   },
   "themes": {
     "vedic-light": "Vedic Light",
@@ -50,5 +51,6 @@
     "mantra": "Hare Krishna Hare Krishna\nKrishna Krishna Hare Hare\nHare Rama Hare Rama\nRama Rama Hare Hare",
     "purification": "Om. Whether impure or pure, in any state, one who remembers the lotus-eyed Lord is purified within and without."
   },
+  "projectDescription": "Ask Krishna is a free Bhagavad Gita reflection app: hold a question silently and receive five three-verse passages, or read all 18 chapters.",
   "disclaimer": "This page presents verses from the Bhagavad Gita for reflection and inspiration. Interpretations of ancient wisdom can vary across traditions, teachers, and contexts. The passages shown may offer guidance, but they are not guaranteed answers or substitutes for your own judgment."
 }

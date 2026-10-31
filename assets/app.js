@@ -28,7 +28,11 @@
     AK.setTheme(localStorage.getItem(AK.THEME), false);
     document.documentElement.lang = AK.manifest[AK.language()].htmlLang;
     const label = AK.text(`pageLabels.${AK.page}`);
-    document.title = label ? `${label} - ${AK.text("appName")}` : AK.text("appName");
+    document.title = AK.page === "index"
+      ? "Ask Krishna — Bhagavad Gita reflection"
+      : AK.page === "read"
+        ? "Read the Bhagavad Gita — Ask Krishna"
+        : label ? `${label} - ${AK.text("appName")}` : AK.text("appName");
     AK.updateMetaDescription();
 
     if (isReadPage) return AK.readScreens();

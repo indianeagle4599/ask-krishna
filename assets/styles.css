@@ -442,3 +442,8 @@ button:disabled {
   line-height: 1.45;
   text-align: center;
 }
+
+.topbar h1 {
+  margin: 0;
+  font: inherit;
+}

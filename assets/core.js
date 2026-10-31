@@ -237,6 +237,8 @@
     logo.setAttribute("aria-hidden", "true");
     brand.append(logo, document.createTextNode(AK.text("appName")));
     brand.addEventListener("click", AK.goHome);
+    const heading = document.createElement("h1");
+    heading.append(brand);
 
     const controls = document.createElement("div");
     controls.className = "settings";
@@ -282,14 +284,18 @@
       controls.append(themeControl, languageControl);
     }
 
-    bar.append(brand, controls);
+    bar.append(heading, controls);
     return bar;
   };
 
   AK.footer = function () {
     const el = document.createElement("footer");
     el.className = "site-footer";
-    el.textContent = AK.text("disclaimer");
+    el.append(AK.block("", AK.text("projectDescription")), AK.block("", AK.text("disclaimer")));
+    const about = document.createElement("a");
+    about.href = "https://hiteshgoyal.me/projects/ask-krishna/";
+    about.textContent = AK.text("labels.aboutProject");
+    el.append(about);
     return el;
   };
 
