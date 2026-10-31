@@ -1,0 +1,39 @@
+{
+  "baseUrl": "https://hiteshgoyal.me/ask-krishna/",
+  "repoUrl": "https://github.com/indianeagle4599/ask-krishna",
+  "noticeUrl": "https://github.com/indianeagle4599/ask-krishna/blob/main/NOTICE.md",
+  "ogImage": "https://hiteshgoyal.me/ask-krishna/assets/og-image.png",
+  "ogImageAlt": "Ask Krishna logo, an open scripture on a lotus, with the words Bhagavad Gita reflection",
+  "reader": {
+    "name": "Read the Bhagavad Gita",
+    "description": "Read all 18 chapters of the Bhagavad Gita online, one verse at a time: Sanskrit with English or Hindi meaning. Bookmark verses and pick up where you left off."
+  },
+  "chapterPage": {
+    "title": "Bhagavad Gita Chapter {n}, {name} — Sanskrit, English, Hindi",
+    "description": "Bhagavad Gita Chapter {n}, {name}: all {count} verses in Sanskrit with English and Hindi meanings, on one page. Read it verse by verse in Ask Krishna.",
+    "heading": "Bhagavad Gita Chapter {n}: {name}",
+    "intro": "All {count} verses of Chapter {n} in Sanskrit, with English and Hindi meanings.",
+    "readerLink": "Read one verse at a time in Ask Krishna",
+    "attribution": "English translation: Swami Sivananda. Hindi translation: Swami Tejomayananda. Text from the VedicScriptures dataset (MIT License)."
+  },
+  "chapters": [
+    { "n": 1, "name": "Arjuna Vishada Yoga", "sa": "अर्जुनविषादयोग" },
+    { "n": 2, "name": "Sankhya Yoga", "sa": "सांख्ययोग" },
+    { "n": 3, "name": "Karma Yoga", "sa": "कर्मयोग" },
+    { "n": 4, "name": "Jnana Karma Sanyasa Yoga", "sa": "ज्ञानकर्मसंन्यासयोग" },
+    { "n": 5, "name": "Karma Sanyasa Yoga", "sa": "कर्मसंन्यासयोग" },
+    { "n": 6, "name": "Dhyana Yoga", "sa": "ध्यानयोग" },
+    { "n": 7, "name": "Jnana Vijnana Yoga", "sa": "ज्ञानविज्ञानयोग" },
+    { "n": 8, "name": "Akshara Brahma Yoga", "sa": "अक्षरब्रह्मयोग" },
+    { "n": 9, "name": "Raja Vidya Raja Guhya Yoga", "sa": "राजविद्याराजगुह्ययोग" },
+    { "n": 10, "name": "Vibhuti Yoga", "sa": "विभूतियोग" },
+    { "n": 11, "name": "Vishvarupa Darshana Yoga", "sa": "विश्वरूपदर्शनयोग" },
+    { "n": 12, "name": "Bhakti Yoga", "sa": "भक्तियोग" },
+    { "n": 13, "name": "Kshetra Kshetrajna Vibhaga Yoga", "sa": "क्षेत्रक्षेत्रज्ञविभागयोग" },
+    { "n": 14, "name": "Gunatraya Vibhaga Yoga", "sa": "गुणत्रयविभागयोग" },
+    { "n": 15, "name": "Purushottama Yoga", "sa": "पुरुषोत्तमयोग" },
+    { "n": 16, "name": "Daivasura Sampad Vibhaga Yoga", "sa": "दैवासुरसम्पद्विभागयोग" },
+    { "n": 17, "name": "Shraddhatraya Vibhaga Yoga", "sa": "श्रद्धात्रयविभागयोग" },
+    { "n": 18, "name": "Moksha Sanyasa Yoga", "sa": "मोक्षसंन्यासयोग" }
+  ]
+}
