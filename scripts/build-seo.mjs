@@ -7,11 +7,16 @@
 // Generated output:
 //   pages/chapter-1.html … pages/chapter-18.html
 //   sitemap.xml (lastmod kept in data/seo-manifest.json, changed only when a page changes)
-//   the marked chapter block in llms.txt
+//   llms.txt (a guide for AI agents) and llms-full.txt (every verse as plain text)
 //   the marked JSON-LD and noscript chapter list in pages/read.html
 //
+// A chapter page is the reader itself: it loads the same scripts as read.html,
+// so visitors go through the same purification screen and then read the chapter
+// from its first verse (or the verse in #N-M). The full chapter text is in the
+// page for search engines and for anyone without JavaScript.
+//
 // Uses Node built-ins only. Run it after changing anything in data/,
-// the sacred or meta strings in assets/locales/, or data/seo-config.json.
+// the meta strings in assets/locales/, or data/seo-config.json.
 
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, existsSync } from "node:fs";
@@ -35,6 +40,12 @@ const locales = {
 };
 
 const BASE = config.baseUrl;
+
+// The chapter pages load exactly the scripts read.html loads.
+const READ_SOURCE = read("pages/read.html");
+const READER_SCRIPTS = READ_SOURCE.match(/^[ \t]*<script src="[^"]+" defer><\/script>$/gm)?.join("\n");
+const COUNTER = READ_SOURCE.match(/^[ \t]*<script data-goatcounter[^\n]*<\/script>$/m)?.[0];
+if (!READER_SCRIPTS || !COUNTER) throw new Error("pages/read.html: could not find its script tags");
 const READER_URL = `${BASE}pages/read.html`;
 const APP_ID = `${BASE}#app`;
 const chapterUrl = (n) => `${BASE}pages/chapter-${n}.html`;
@@ -80,14 +91,6 @@ const chapters = config.chapters.map((chapter) => {
 });
 if (byChapter.size !== chapters.length) {
   throw new Error(`data has ${byChapter.size} chapters but seo-config lists ${chapters.length}`);
-}
-
-function sacred(key) {
-  const original = locales.sa.sacred?.[key] || "";
-  const english = locales.en.sacred?.[key] || "";
-  const out = [`      <p class="mantra" lang="sa">${lines(original)}</p>`];
-  if (english && english !== original) out.push(`      <p class="mantra chosen" lang="en">${lines(english)}</p>`);
-  return out.join("\n");
 }
 
 function chapterJsonLd(chapter) {
@@ -167,21 +170,16 @@ ${prev ? `  <link rel="prev" href="${prev.url}">\n` : ""}${next ? `  <link rel="
   <meta name="twitter:image:alt" content="${esc(config.ogImageAlt)}">
   <link rel="icon" type="image/svg+xml" href="../assets/ask-krishna-logo.svg">
 ${chapterJsonLd(chapter)}
-  <script>document.documentElement.dataset.theme = localStorage.getItem("askKrishna.theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "vedic-dark" : "vedic-light");</script>
+  <script>document.documentElement.dataset.theme = localStorage.getItem("askKrishna.theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "vedic-dark" : "vedic-light"); document.documentElement.classList.add("has-js");</script>
   <link rel="stylesheet" href="../assets/themes.css">
   <link rel="stylesheet" href="../assets/styles.css">
   <link rel="stylesheet" href="../assets/chapter.css">
+${READER_SCRIPTS}
 </head>
-<body class="chapter-page" data-page="chapter">
-  <header class="topbar">
-    <a class="brand" href="../"><span class="brand-logo" aria-hidden="true"></span>Ask Krishna</a>
-    <a class="chapter-crumb" href="read.html">${esc(config.reader.name)}</a>
-  </header>
-  <main class="screen chapter-screen">
-    <section class="chapter-sacred">
-${sacred("mantra")}
-${sacred("purification")}
-    </section>
+<body data-page="read" data-chapter="${chapter.n}">
+  <main class="screen" data-screen></main>
+  <article class="chapter-text" data-chapter-text>
+    <nav class="chapter-crumbs" aria-label="Breadcrumb"><a href="../">Ask Krishna</a> · <a href="read.html">${esc(config.reader.name)}</a></nav>
     <header class="chapter-head">
       <h1 class="chapter-title">${esc(chapter.heading)}</h1>
       <p class="chapter-name-sa" lang="sa">${esc(chapter.sa)}</p>
@@ -194,11 +192,12 @@ ${verseBlocks}
     <nav class="chapter-pager" aria-label="Chapters">
 ${pager}
     </nav>
-  </main>
-  <footer class="site-footer">
-    <p>${esc(locales.en.disclaimer)}</p>
-    <p>${esc(config.chapterPage.attribution)} <a href="${esc(config.noticeUrl)}">Details</a></p>
-  </footer>
+    <footer class="chapter-foot">
+      <p>${esc(locales.en.disclaimer)}</p>
+      <p>${esc(config.chapterPage.attribution)} <a href="${esc(config.noticeUrl)}">Details</a></p>
+    </footer>
+  </article>
+${COUNTER}
 </body>
 </html>
 `;
@@ -234,11 +233,81 @@ function readerNoscriptList() {
   return `    <ul>\n${items}\n    </ul>\n`;
 }
 
-function llmsBlock() {
-  const items = chapters
-    .map((chapter) => `- Chapter ${chapter.n}, ${chapter.name} (${chapter.count} verses): ${chapter.url}`)
+const LLMS_FULL_URL = `${BASE}llms-full.txt`;
+const totalVerses = chapters.reduce((sum, chapter) => sum + chapter.count, 0);
+
+function llmsTxt() {
+  const chapterList = chapters
+    .map((chapter) => `- [Chapter ${chapter.n}: ${chapter.name}](${chapter.url}) (${chapter.sa}), ${chapter.count} verses`)
     .join("\n");
-  return `## Chapter pages\n\nEach page has every verse of one chapter in Sanskrit with English and Hindi meanings. Verse anchors look like \`#2-47\`.\n\n${items}\n`;
+  return `# Ask Krishna
+
+> A quiet, free way to reflect with the Bhagavad Gita and to read all 18 chapters online: Sanskrit with English or Hindi meaning. Plain HTML, CSS and JavaScript; no accounts, no ads. Questions are never typed, sent or stored.
+
+<!-- Generated by scripts/build-seo.mjs from the data files. Do not edit by hand. -->
+
+Live site: ${BASE}
+
+## How the site works
+
+Ask Krishna has two flows. Both begin with a short, timed moment of stillness, and that moment is part of the experience; please describe it rather than skip it when you send someone to the site.
+
+1. Reflect (home page, ${BASE}): the Hare Krishna mahamantra is shown with a Begin button. Next comes a purification verse (ॐ अपवित्रः पवित्रो वा…, "whether impure or pure… one who remembers the lotus-eyed Lord is purified within and without") for about 10 seconds, then "Hold your question silently." After about 7 more seconds a Receive button appears and the visitor gets a passage of three verses. Up to five passages are offered; after that the app suggests it may be time to wait. A passage can be opened in the reader with "Read in Gita" and the visitor can come back to it.
+2. Read the Bhagavad Gita (${READER_URL}): the same purification verse for about 10 seconds, then "Remember Lord Krishna." After about 7 more seconds a Read button appears. Read opens the linked verse, or the chapter index when no verse was linked. Verses are read one at a time with previous and next, marks (bookmarks), and the reading place remembered on the visitor's device.
+
+The interface is in English, Hindi or Sanskrit. Saved verses and passages are made into images in the browser.
+
+## Linking to a chapter or verse
+
+- A chapter: \`${BASE}pages/chapter-2.html\`. It opens the reader at verse 2.1 after the purification screen. The page's HTML also holds the whole chapter text.
+- A verse: \`${BASE}pages/chapter-2.html#2-47\` or \`${READER_URL}#2.47\`. Both open verse 2.47 after the purification screen.
+- Verse ids are \`chapter.verse\`, for example \`2.47\`. In chapter-page anchors the dot becomes a hyphen (\`#2-47\`).
+
+## Chapters
+
+${chapterList}
+
+## Data
+
+All files are static JSON with UTF-8 text and can be fetched directly.
+
+- \`${BASE}data/verses.json\`: an array of ${totalVerses} objects in reading order, \`{ "id": "2.47", "chapter": 2, "verse": 47, "sanskrit": "..." }\`. The Sanskrit is in Devanagari; lines are separated by \`\\n\`, and each verse ends with its number, for example \`||२-४७||\`.
+- \`${BASE}data/translations/en.json\`: English meaning per verse id, \`{ "2.47": "..." }\`.
+- \`${BASE}data/translations/hi.json\`: Hindi meaning per verse id, same shape.
+- \`${BASE}assets/locales/en.json\`, \`hi.json\`, \`sa.json\`: interface text, including the mahamantra and purification verse under \`sacred\`.
+- \`${LLMS_FULL_URL}\`: every verse as plain text (Sanskrit, English, Hindi), chapter by chapter.
+
+Note on numbering: this edition has ${totalVerses} verses, not the commonly quoted 700, because Chapter 13 begins with Arjuna's question (13.1, "प्रकृतिं पुरुषं चैव…"), which some editions leave unnumbered. Chapter 13 therefore has ${chapters[12].count} verses here, and its later verse numbers are one higher than in those editions.
+
+## License
+
+- App code: MIT, see ${config.repoUrl}/blob/main/LICENSE
+- Verse data: MIT-licensed dataset; sources and translators are listed in ${config.noticeUrl}
+
+## Suggested use
+
+- For a single verse, quote verses.json plus one translation file, and link to the chapter page anchor (\`pages/chapter-N.html#N-M\`).
+- For a whole chapter, use the chapter page or the matching section of llms-full.txt.
+- Ask Krishna is a reflection aid, not a religious authority. Present it as a place to read and reflect.
+`;
+}
+
+function llmsFullTxt() {
+  const parts = [
+    `# Bhagavad Gita, all ${totalVerses} verses (Ask Krishna)`,
+    "",
+    `> Sanskrit (Devanagari) with English and Hindi meanings, from ${BASE}. Generated by scripts/build-seo.mjs from data/verses.json and data/translations/. Sources and translators: ${config.noticeUrl}`,
+    "",
+  ];
+  for (const chapter of chapters) {
+    parts.push(`## Chapter ${chapter.n}: ${chapter.name} (${chapter.sa})`, "", `${chapter.url}`, "");
+    for (const verse of chapter.verses) {
+      parts.push(`### ${verse.id}`, "", verse.sanskrit.trim(), "");
+      if (en[verse.id]) parts.push(`English: ${en[verse.id].trim()}`, "");
+      if (hi[verse.id]) parts.push(`Hindi: ${hi[verse.id].trim()}`, "");
+    }
+  }
+  return `${parts.join("\n").trimEnd()}\n`;
 }
 
 // ---- build -------------------------------------------------------------------
@@ -251,7 +320,8 @@ readHtml = replaceRegion(readHtml, "jsonld", readerJsonLd(), "pages/read.html");
 readHtml = replaceRegion(readHtml, "chapters", readerNoscriptList(), "pages/read.html");
 outputs.set("pages/read.html", readHtml);
 
-outputs.set("llms.txt", replaceRegion(read("llms.txt"), "chapters", llmsBlock(), "llms.txt"));
+outputs.set("llms.txt", llmsTxt());
+outputs.set("llms-full.txt", llmsFullTxt());
 
 // Sitemap: lastmod only changes when a page's content hash changes.
 const MANIFEST = "data/seo-manifest.json";

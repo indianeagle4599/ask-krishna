@@ -144,13 +144,15 @@ Saved reflection passages are rendered in-browser as PNG cards; no image service
 
 ## Search pages (run after data changes)
 
-Search engines and link previews get their own plain pages, generated from the same data the app uses:
+Every chapter also has its own address, generated from the same data the app uses:
 
-- `pages/chapter-1.html` … `pages/chapter-18.html` — every verse of one chapter in Sanskrit, with English and Hindi meanings, plus links into the reader.
+- `pages/chapter-1.html` … `pages/chapter-18.html` — each one is the reader. A visitor goes through the same purification, "Remember Lord Krishna." and Read steps, and Read opens that chapter's first verse (or the verse in the link, such as `chapter-2.html#2-47`). The page also carries the whole chapter (Sanskrit, English and Hindi for every verse) as plain text, which is what search engines and link previews read; the app hides it once JavaScript runs, and it is the page when JavaScript is off.
+- `read.html#2.47` style links work the same way: after Read the reader opens that verse instead of the index.
 - `sitemap.xml` — home, reader and the 18 chapter pages. A page's `lastmod` only changes when its content changes (hashes live in `data/seo-manifest.json`).
-- The marked chapter list in `llms.txt`, and the marked JSON-LD and no-JavaScript chapter list in `pages/read.html`.
+- `llms.txt` (a guide to the site and its data for AI tools) and `llms-full.txt` (every verse as plain text), both generated in full.
+- The marked JSON-LD and no-JavaScript chapter list in `pages/read.html`.
 
-Chapter names, page title and description patterns, and the share image live in `data/seo-config.json`. After changing anything in `data/`, the meta or sacred strings in `assets/locales/`, or that config, run:
+Chapter names, page title and description patterns, and the share image live in `data/seo-config.json`. After changing anything in `data/`, the meta strings in `assets/locales/`, the script tags in `pages/read.html` (chapter pages copy them), or that config, run:
 
 ```sh
 node scripts/build-seo.mjs
