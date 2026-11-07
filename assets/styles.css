@@ -516,9 +516,9 @@ button:disabled {
   body[data-page="index"] .site-footer,
   body[data-page="reflect"] .site-footer,
   body[data-page="read"]:has(.screen > .center) .site-footer {
-    padding: 0.38rem 0.8rem 0.48rem;
+    padding: 0.22rem 0.75rem 0.26rem;
     font-size: 0.7rem;
-    line-height: 1.35;
+    line-height: 1.2;
   }
 
   body[data-page="index"] .pulse,
@@ -550,11 +550,6 @@ button:disabled {
     padding-bottom: 0.32rem;
   }
 
-  body[data-page="index"] .site-footer,
-  body[data-page="reflect"] .site-footer,
-  body[data-page="read"]:has(.screen > .center) .site-footer {
-    padding-bottom: 0.36rem;
-  }
 }
 
 /* Very short landscape: tighten spacing only (transliteration stays visible). */
@@ -586,9 +581,11 @@ button:disabled {
   body[data-page="index"] .site-footer,
   body[data-page="reflect"] .site-footer,
   body[data-page="read"]:has(.screen > .center) .site-footer {
-    padding: 0.35rem 0.75rem 0.45rem;
+    padding: 0.18rem 0.7rem 0.2rem;
     font-size: 0.7rem;
+    line-height: 1.15;
   }
+
 }
 
 /* Ultra-wide desktops: slightly larger type only (never below main defaults). */
