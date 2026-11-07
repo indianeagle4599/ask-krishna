@@ -1,31 +1,28 @@
 #!/usr/bin/env node
 import { chromium } from "playwright";
-import { mkdir } from "node:fs/promises";
+import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
+import { execSync } from "node:child_process";
 
 const BASE = process.env.SCREENSHOT_BASE || "http://127.0.0.1:8000";
-const OUT = process.env.SCREENSHOT_OUT || "/opt/cursor/artifacts/responsive-before";
+const OUT = process.env.SCREENSHOT_OUT || "/opt/cursor/artifacts/responsive-after-v2";
 
 const VIEWPORTS = [
-  { w: 360, h: 640, dpr: 2, mobile: true },
-  { w: 390, h: 844, dpr: 2, mobile: true },
-  { w: 430, h: 932, dpr: 2, mobile: true },
   { w: 640, h: 360, dpr: 2, mobile: true },
   { w: 844, h: 390, dpr: 2, mobile: true },
-  { w: 768, h: 1024, dpr: 2, mobile: true },
-  { w: 1024, h: 768, dpr: 2, mobile: false },
+  { w: 932, h: 430, dpr: 2, mobile: true },
+  { w: 390, h: 844, dpr: 2, mobile: true },
   { w: 1280, h: 800, dpr: 1, mobile: false },
   { w: 1440, h: 900, dpr: 1, mobile: false },
   { w: 1920, h: 1080, dpr: 1, mobile: false },
   { w: 2560, h: 1440, dpr: 1, mobile: false },
 ];
 
-const PAGES = [
-  { id: "home", path: "/" },
-  { id: "read", path: "/pages/read.html#2.47" },
-  { id: "chapter-2", path: "/pages/chapter-2.html" },
-  { id: "verse-2-47", path: "/pages/verse-2-47.html" },
-  { id: "verse-11-55", path: "/pages/verse-11-55.html" },
+const SHOTS = [
+  { id: "home", prep: prepHome },
+  { id: "purification", prep: prepPurification },
+  { id: "read-2-47", prep: (p) => prepReadVerse(p, "2.47") },
+  { id: "read-11-55", prep: (p) => prepReadVerse(p, "11.55") },
 ];
 
 function slug(vp) {
@@ -44,8 +41,25 @@ async function prepHome(page) {
   await page.waitForSelector(".center button");
 }
 
-async function prepRead247(page) {
-  await page.goto(`${BASE}/pages/read.html#2.47`);
+async function prepPurification(page) {
+  await page.goto(`${BASE}/`);
+  await page.evaluate(() => {
+    localStorage.setItem("askKrishna.theme", "vedic-light");
+    localStorage.setItem("askKrishna.language", "en");
+    sessionStorage.clear();
+    localStorage.removeItem("askKrishna.session");
+  });
+  await page.reload({ waitUntil: "networkidle" });
+  await page.waitForFunction(() => window.ASK_KRISHNA?.go);
+  await page.evaluate(() => {
+    window.ASK_KRISHNA.session = {};
+    window.ASK_KRISHNA.go("reflect");
+  });
+  await page.waitForSelector(".center .pulse");
+}
+
+async function prepReadVerse(page, id) {
+  await page.goto(`${BASE}/pages/read.html#${id}`);
   await page.evaluate(() => {
     localStorage.setItem("askKrishna.theme", "vedic-light");
     localStorage.setItem("askKrishna.language", "en");
@@ -56,31 +70,57 @@ async function prepRead247(page) {
     window.__readBooted = true;
   });
   await page.reload({ waitUntil: "networkidle" });
-  await page.waitForFunction(async () => {
-    const AK = window.ASK_KRISHNA;
-    if (!AK?.readScreens) return false;
-    await AK.i18n.loadLanguage("en");
-    if (!AK.verseData?.length) {
-      const data = await fetch(`${AK.root}data/verses.json`).then((r) => r.json());
-      AK.verseData = data;
-    }
-    if (AK.readPhase !== "read" || AK.readFocalId !== "2.47") {
-      AK.saveReadPurify({ rememberReady: true, readReady: true });
-      AK.setReadFocal("2.47");
-    }
-    return !!document.querySelector(".passage-card");
-  }, { timeout: 15000 });
+  await page.waitForFunction(
+    async (verseId) => {
+      const AK = window.ASK_KRISHNA;
+      if (!AK?.setReadFocal) return false;
+      await AK.i18n.loadLanguage("en");
+      if (!AK.verseData?.length) {
+        AK.verseData = await fetch(`${AK.root}data/verses.json`).then((r) => r.json());
+      }
+      if (AK.readFocalId !== verseId) AK.setReadFocal(verseId);
+      return !!document.querySelector(".passage-card .sanskrit-line");
+    },
+    id,
+    { timeout: 20000 },
+  );
 }
 
-async function captureStaticChapter(context, vp, shot) {
-  const page = await context.newPage();
-  await page.goto(`${BASE}${shot.path}`, { waitUntil: "domcontentloaded" });
-  await page.screenshot({ path: join(OUT, `${shot.id}__${slug(vp)}.png`) });
-  await page.close();
+async function measureFonts(page, shot) {
+  return page.evaluate((which) => {
+    const px = (el) => (el ? getComputedStyle(el).fontSize : null);
+    if (which === "home") {
+      return {
+        mantra: px(document.querySelector(".center .mantra")),
+        chosen: px(document.querySelector(".center .chosen")),
+        footer: px(document.querySelector(".site-footer")),
+        beginBottom: document.querySelector(".center button")?.getBoundingClientRect().bottom,
+        viewportH: window.innerHeight,
+        scrollH: document.documentElement.scrollHeight,
+      };
+    }
+    if (which === "purification") {
+      return {
+        mantra: px(document.querySelector(".center .mantra")),
+        footer: px(document.querySelector(".site-footer")),
+        viewportH: window.innerHeight,
+        scrollH: document.documentElement.scrollHeight,
+      };
+    }
+    const card = document.querySelector(".passage-card");
+    return {
+      sanskrit: px(card?.querySelector(".sanskrit-line")),
+      english: px(card?.querySelector(".translation-line")),
+      footer: px(document.querySelector(".site-footer")),
+      viewportH: window.innerHeight,
+      scrollH: document.documentElement.scrollHeight,
+    };
+  }, shot.id.startsWith("read") ? shot.id : shot.id);
 }
 
 const browser = await chromium.launch({ headless: true });
 await mkdir(OUT, { recursive: true });
+const measures = [];
 
 for (const vp of VIEWPORTS) {
   const context = await browser.newContext({
@@ -89,44 +129,38 @@ for (const vp of VIEWPORTS) {
     isMobile: vp.mobile,
     hasTouch: vp.mobile,
   });
-  const staticContext = await browser.newContext({
-    viewport: { width: vp.w, height: vp.h },
-    deviceScaleFactor: vp.dpr,
-    isMobile: vp.mobile,
-    hasTouch: vp.mobile,
-    javaScriptEnabled: false,
-  });
-
   const page = await context.newPage();
-  for (const shot of PAGES) {
-    if (shot.id === "chapter-2" || shot.id === "verse-11-55") {
-      await captureStaticChapter(staticContext, vp, shot);
-      continue;
-    }
-    if (shot.id === "verse-2-47") {
-      await prepRead247(page);
-      await page.goto(`${BASE}/pages/verse-2-47.html`, { waitUntil: "networkidle" });
-      await page.waitForFunction(async () => {
-        const AK = window.ASK_KRISHNA;
-        if (!AK?.setReadFocal) return !!document.querySelector(".passage-card");
-        if (!AK.verseData?.length) {
-          const data = await fetch(`${AK.root}data/verses.json`).then((r) => r.json());
-          AK.verseData = data;
-        }
-        if (AK.readFocalId !== "2.47") AK.setReadFocal("2.47");
-        return !!document.querySelector(".passage-card");
-      }, { timeout: 15000 });
-      await page.screenshot({ path: join(OUT, `${shot.id}__${slug(vp)}.png`) });
-      continue;
-    }
-    if (shot.id === "home") await prepHome(page);
-    else if (shot.id === "read") await prepRead247(page);
-    await page.screenshot({ path: join(OUT, `${shot.id}__${slug(vp)}.png`) });
+  for (const shot of SHOTS) {
+    await shot.prep(page);
+    const name = `${shot.id}__${slug(vp)}.png`;
+    await page.screenshot({ path: join(OUT, name) });
+    const m = await measureFonts(page, shot);
+    const beginOk =
+      shot.id === "home"
+        ? m.beginBottom <= m.viewportH && m.scrollH <= m.viewportH + 1
+        : m.scrollH <= m.viewportH + 1;
+    measures.push({ viewport: slug(vp), shot: shot.id, ...m, noScroll: beginOk });
   }
-  await page.close();
   await context.close();
-  await staticContext.close();
 }
 
 await browser.close();
+
+let mainCss = "";
+try {
+  mainCss = execSync("git show main:assets/styles.css", { cwd: join(import.meta.dirname, ".."), encoding: "utf8" });
+} catch {
+  mainCss = "";
+}
+
+const log = {
+  capturedAt: new Date().toISOString(),
+  outputDir: OUT,
+  note: "main reference: translation-line clamp(1.2rem, 4.5vw, 1.65rem); sanskrit-line clamp(0.95rem, 3.4vw, 1.15rem)",
+  mainCssSnippet: mainCss.includes("max-height: 31.25rem") ? "branch has short-height rules" : "main has no short-height rules",
+  measures,
+};
+
+await writeFile(join(OUT, "font-sizes.json"), `${JSON.stringify(log, null, 2)}\n`);
 console.log("Saved to", OUT);
+console.log("Measures written to font-sizes.json");

@@ -472,80 +472,138 @@ button:disabled {
   color: inherit;
 }
 
-/* Short viewports (phone landscape): keep the home Begin control on screen. */
-@media (max-height: 26rem) {
-  .topbar {
-    padding: 0.45rem 0.85rem;
+/* Short viewports (phone landscape): sacred / Begin screens only — not the verse reader. */
+@media (max-height: 31.25rem) {
+  body[data-page="index"] .topbar,
+  body[data-page="reflect"] .topbar,
+  body[data-page="read"]:has(.screen > .center) .topbar {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.82rem;
   }
 
-  .screen {
-    padding: 0.65rem 1rem 0.85rem;
+  body[data-page="index"] .screen,
+  body[data-page="reflect"] .screen,
+  body[data-page="read"] .screen:has(> .center) {
+    padding: 0.38rem 0.8rem 0.42rem;
   }
 
-  .center {
+  body[data-page="index"] .center,
+  body[data-page="reflect"] .center,
+  body[data-page="read"] .center {
     min-height: auto;
-    gap: 0.85rem;
+    gap: 0.38rem;
   }
 
-  .mantra,
-  .verse-text {
-    font-size: clamp(0.95rem, 3.8vw, 1.28rem);
-    line-height: 1.5;
+  body[data-page="index"] .mantra,
+  body[data-page="reflect"] .mantra,
+  body[data-page="read"] .center .mantra {
+    font-size: clamp(0.9rem, 3.6vw, 1.22rem);
+    line-height: 1.45;
   }
 
-  .chosen {
-    margin-top: 0.45rem;
+  body[data-page="index"] .chosen,
+  body[data-page="read"] .center .chosen {
+    margin-top: 0.2rem;
   }
 
-  .site-footer {
-    padding: 0.55rem 1rem 0.75rem;
+  body[data-page="index"] .brand-logo,
+  body[data-page="reflect"] .brand-logo,
+  body[data-page="read"]:has(.screen > .center) .brand-logo {
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+
+  body[data-page="index"] .site-footer,
+  body[data-page="reflect"] .site-footer,
+  body[data-page="read"]:has(.screen > .center) .site-footer {
+    padding: 0.38rem 0.8rem 0.48rem;
+    font-size: 0.7rem;
+    line-height: 1.35;
+  }
+
+  body[data-page="index"] .pulse,
+  body[data-page="reflect"] .pulse,
+  body[data-page="read"] .center .pulse {
+    width: 0.85rem;
+    height: 0.85rem;
   }
 }
 
-@media (max-height: 23rem) {
-  .center .chosen {
-    display: none;
+/* Mid-short landscape (e.g. 844×390): a few pixels of extra tight spacing. */
+@media (max-height: 25.5rem) and (min-height: 23.5rem) {
+  body[data-page="index"] .screen,
+  body[data-page="reflect"] .screen,
+  body[data-page="read"] .screen:has(> .center) {
+    padding-bottom: 0.32rem;
   }
 
-  .center {
-    gap: 0.55rem;
+  body[data-page="index"] .center,
+  body[data-page="reflect"] .center,
+  body[data-page="read"] .center {
+    gap: 0.3rem;
   }
 
-  .mantra,
-  .verse-text {
-    font-size: clamp(0.84rem, 3.4vw, 1.05rem);
+  body[data-page="index"] .topbar,
+  body[data-page="reflect"] .topbar,
+  body[data-page="read"]:has(.screen > .center) .topbar {
+    padding-top: 0.32rem;
+    padding-bottom: 0.32rem;
+  }
+
+  body[data-page="index"] .site-footer,
+  body[data-page="reflect"] .site-footer,
+  body[data-page="read"]:has(.screen > .center) .site-footer {
+    padding-bottom: 0.36rem;
+  }
+}
+
+/* Very short landscape: tighten spacing only (transliteration stays visible). */
+@media (max-height: 23.5rem) {
+  body[data-page="index"] .screen,
+  body[data-page="reflect"] .screen,
+  body[data-page="read"] .screen:has(> .center) {
+    padding: 0.35rem 0.75rem 0.4rem;
+  }
+
+  body[data-page="index"] .center,
+  body[data-page="reflect"] .center,
+  body[data-page="read"] .center {
+    gap: 0.4rem;
+  }
+
+  body[data-page="index"] .mantra,
+  body[data-page="reflect"] .mantra,
+  body[data-page="read"] .center .mantra {
+    font-size: clamp(0.86rem, 3.2vw, 1.08rem);
     line-height: 1.38;
   }
 
-  .site-footer {
-    font-size: 0.52rem;
-    padding: 0.3rem 0.75rem 0.4rem;
-    line-height: 1.35;
+  body[data-page="index"] .chosen,
+  body[data-page="read"] .center .chosen {
+    margin-top: 0.25rem;
+  }
+
+  body[data-page="index"] .site-footer,
+  body[data-page="reflect"] .site-footer,
+  body[data-page="read"]:has(.screen > .center) .site-footer {
+    padding: 0.35rem 0.75rem 0.45rem;
+    font-size: 0.7rem;
   }
 }
 
-/* Large desktops: slightly wider measure and type so content does not feel tiny. */
-@media (min-width: 90rem) {
-  .screen {
-    width: min(100%, 52rem);
-    padding: 2.35rem 1.35rem;
-  }
-
+/* Ultra-wide desktops: slightly larger type only (never below main defaults). */
+@media (min-width: 120rem) {
   .mantra,
   .verse-text {
-    font-size: clamp(1.28rem, 1.45vw, 2rem);
+    font-size: clamp(1.18rem, 5vw, 1.95rem);
   }
 
   .translation-line {
-    font-size: clamp(1.32rem, 1.35vw, 1.9rem);
-  }
-
-  .passage-card {
-    padding: clamp(1.3rem, 1.6vw, 2.35rem);
+    font-size: clamp(1.2rem, 4.5vw, 1.75rem);
   }
 
   .sanskrit-line {
-    font-size: clamp(1.02rem, 1vw, 1.28rem);
+    font-size: clamp(0.95rem, 3.4vw, 1.22rem);
   }
 }
 
