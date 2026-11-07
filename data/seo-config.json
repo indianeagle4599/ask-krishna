@@ -2,6 +2,10 @@
   "baseUrl": "https://hiteshgoyal.me/ask-krishna/",
   "repoUrl": "https://github.com/indianeagle4599/ask-krishna",
   "noticeUrl": "https://github.com/indianeagle4599/ask-krishna/blob/main/NOTICE.md",
+  "author": {
+    "name": "Hitesh Goyal",
+    "url": "https://hiteshgoyal.me"
+  },
   "ogImage": "https://hiteshgoyal.me/ask-krishna/assets/og-image.png",
   "ogImageAlt": "Ask Krishna logo, an open scripture on a lotus, with the words Bhagavad Gita reflection",
   "reader": {
@@ -9,12 +13,24 @@
     "description": "Read all 18 chapters of the Bhagavad Gita online, one verse at a time: Sanskrit with English or Hindi meaning. Bookmark verses and pick up where you left off."
   },
   "chapterPage": {
-    "title": "Bhagavad Gita Chapter {n}, {name} — Sanskrit, English, Hindi",
-    "description": "Bhagavad Gita Chapter {n}, {name}: all {count} verses in Sanskrit with English and Hindi meanings, on one page. Read it verse by verse in Ask Krishna.",
+    "title": "Bhagavad Gita Chapter {n}, {name} — all {count} shlokas",
+    "description": "Bhagavad Gita (Bhagavad Geeta, Bhagwat Geeta) Chapter {n}, {name} — adhyay {n}: all {count} shlokas in Sanskrit (Devanagari) with English and Hindi meanings.",
     "heading": "Bhagavad Gita Chapter {n}: {name}",
-    "intro": "All {count} verses of Chapter {n} in Sanskrit, with English and Hindi meanings.",
+    "intro": "All {count} shlokas of adhyay {n} ({name}, {sa}) — भगवद्गीता अध्याय {n}. Each verse has its own page; read one at a time in Ask Krishna.",
     "readerLink": "Read one verse at a time in Ask Krishna",
     "attribution": "English translation: Swami Sivananda. Hindi translation: Swami Tejomayananda. Text from the VedicScriptures dataset (MIT License)."
+  },
+  "versePage": {
+    "title": "Bhagavad Gita Chapter {c} Verse {v} — meaning and translation",
+    "description": "Bhagavad Gita (Geeta) Chapter {c}, shloka {v} — {name}, adhyay {c}: Sanskrit in Devanagari with English and Hindi meaning.",
+    "heading": "Bhagavad Gita Chapter {c}, Verse {v}",
+    "intro": "Shloka (sloka) {v} of adhyaya {c}: {name} ({sa}).",
+    "readerLink": "Open this verse in Ask Krishna",
+    "labels": {
+      "sanskrit": "Sanskrit (Devanagari)",
+      "english": "English meaning",
+      "hindi": "Hindi meaning"
+    }
   },
   "chapters": [
     { "n": 1, "name": "Arjuna Vishada Yoga", "sa": "अर्जुनविषादयोग" },

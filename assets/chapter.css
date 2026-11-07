@@ -94,3 +94,23 @@
 .chapter-foot p {
   margin: 0 0 0.45rem;
 }
+
+.verse-label {
+  margin: 0 0 0.45rem;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 400;
+}
+
+.verse-translation + .verse-translation {
+  margin-top: 0.85rem;
+}
+
+.verse-pager {
+  align-items: center;
+}
+
+.verse-pager a:nth-child(2) {
+  flex: 1;
+  text-align: center;
+}

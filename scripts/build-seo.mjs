@@ -6,6 +6,7 @@
 //
 // Generated output:
 //   pages/chapter-1.html … pages/chapter-18.html
+//   pages/verse-N-M.html (one crawlable page per shloka)
 //   sitemap.xml (lastmod kept in data/seo-manifest.json, changed only when a page changes)
 //   llms.txt (a guide for AI agents) and llms-full.txt (every verse as plain text)
 //   the marked JSON-LD and noscript chapter list in pages/read.html
@@ -19,7 +20,7 @@
 // the meta strings in assets/locales/, or data/seo-config.json.
 
 import { createHash } from "node:crypto";
-import { readFileSync, writeFileSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, readdirSync, unlinkSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -49,6 +50,20 @@ if (!READER_SCRIPTS || !COUNTER) throw new Error("pages/read.html: could not fin
 const READER_URL = `${BASE}pages/read.html`;
 const APP_ID = `${BASE}#app`;
 const chapterUrl = (n) => `${BASE}pages/chapter-${n}.html`;
+const verseFile = (verse) => `pages/verse-${verse.chapter}-${verse.verse}.html`;
+const verseUrl = (verse) => `${BASE}${verseFile(verse)}`;
+const BOOK_ALT = ["Bhagavad Geeta", "Bhagwat Gita", "भगवद्गीता"];
+const AUTHOR = config.author;
+const authorPerson = AUTHOR?.name && AUTHOR?.url
+  ? { "@type": "Person", name: AUTHOR.name, url: AUTHOR.url }
+  : null;
+
+function authorHead() {
+  if (!AUTHOR?.name || !AUTHOR?.url) return "";
+  return `  <meta name="author" content="${esc(AUTHOR.name)}">\n  <link rel="author" href="${esc(AUTHOR.url)}">\n`;
+}
+
+const ANALYTICS_PRECONNECT = `  <link rel="preconnect" href="https://gc.zgo.at" crossorigin>\n`;
 
 const esc = (value) => String(value ?? "")
   .replace(/&/g, "&amp;")
@@ -64,6 +79,35 @@ function today() {
   const now = new Date();
   const pad = (n) => String(n).padStart(2, "0");
   return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+}
+
+function snippet(text, max = 120) {
+  const flat = String(text ?? "").replace(/\s+/g, " ").trim();
+  if (!flat) return "";
+  if (flat.length <= max) return flat;
+  return `${flat.slice(0, max - 1).trim()}…`;
+}
+
+function verseMeta(verse, chapter) {
+  const values = {
+    c: verse.chapter,
+    v: verse.verse,
+    name: chapter.name,
+    sa: chapter.sa,
+    snippet: snippet(en[verse.id]),
+  };
+  const title = fill(config.versePage.title, values);
+  let description = fill(config.versePage.description, values);
+  if (values.snippet) {
+    const extra = ` ${values.snippet}`;
+    description = (description + extra).length <= 300 ? description + extra : description;
+  }
+  return {
+    title,
+    description,
+    heading: fill(config.versePage.heading, values),
+    intro: fill(config.versePage.intro, values),
+  };
 }
 
 // ---- chapters --------------------------------------------------------------
@@ -102,8 +146,13 @@ function chapterJsonLd(chapter) {
     url: chapter.url,
     inLanguage: ["sa", "en", "hi"],
     isPartOf: { "@id": APP_ID },
-    about: { "@type": "Book", name: "Bhagavad Gita" },
+    about: {
+      "@type": "Book",
+      name: "Bhagavad Gita",
+      alternateName: BOOK_ALT,
+    },
     position: chapter.n,
+    ...(authorPerson ? { author: authorPerson } : {}),
   };
   const crumbs = {
     "@context": "https://schema.org",
@@ -126,7 +175,7 @@ function chapterPage(chapter, index) {
     const anchor = `${verse.chapter}-${verse.verse}`;
     const parts = [
       `      <section class="passage-card chapter-verse" id="${anchor}">`,
-      `        <h2 class="ref"><a href="read.html#${verse.id}">${esc(verse.id)}</a></h2>`,
+      `        <h2 class="ref"><a href="verse-${verse.chapter}-${verse.verse}.html">Bhagavad Gita ${esc(verse.id)}</a></h2>`,
       `        <p class="sanskrit-line" lang="sa">${lines(verse.sanskrit)}</p>`,
     ];
     const meanings = [];
@@ -152,7 +201,7 @@ function chapterPage(chapter, index) {
   <meta name="description" content="${esc(chapter.description)}">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="${chapter.url}">
-${prev ? `  <link rel="prev" href="${prev.url}">\n` : ""}${next ? `  <link rel="next" href="${next.url}">\n` : ""}  <meta property="og:type" content="website">
+${prev ? `  <link rel="prev" href="${prev.url}">\n` : ""}${next ? `  <link rel="next" href="${next.url}">\n` : ""}${authorHead()}${ANALYTICS_PRECONNECT}  <meta property="og:type" content="website">
   <meta property="og:site_name" content="Ask Krishna">
   <meta property="og:locale" content="en_US">
   <meta property="og:title" content="${esc(chapter.title)}">
@@ -203,6 +252,147 @@ ${COUNTER}
 `;
 }
 
+const flatVerses = chapters.flatMap((chapter) => chapter.verses);
+const verseIndex = new Map(flatVerses.map((verse, index) => [verse.id, index]));
+
+function verseJsonLd(verse, chapter, meta) {
+  const url = verseUrl(verse);
+  const page = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: meta.title,
+    description: meta.description,
+    url,
+    inLanguage: ["sa", "en", "hi"],
+    isPartOf: { "@id": APP_ID },
+    about: {
+      "@type": "Book",
+      name: "Bhagavad Gita",
+      alternateName: BOOK_ALT,
+    },
+    mainEntity: {
+      "@type": "Quotation",
+      text: verse.sanskrit.replace(/\s*\|\s*/g, " ").replace(/\n+/g, " ").trim(),
+      inLanguage: "sa",
+    },
+    position: verse.verse,
+    ...(authorPerson ? { author: authorPerson } : {}),
+  };
+  if (en[verse.id]) page.translation = { "@type": "CreativeWork", text: en[verse.id].trim(), inLanguage: "en" };
+  const crumbs = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Ask Krishna", item: BASE },
+      { "@type": "ListItem", position: 2, name: config.reader.name, item: READER_URL },
+      { "@type": "ListItem", position: 3, name: `Chapter ${chapter.n}: ${chapter.name}`, item: chapter.url },
+      { "@type": "ListItem", position: 4, name: `Verse ${verse.verse}`, item: url },
+    ],
+  };
+  return [page, crumbs]
+    .map((block) => `  <script type="application/ld+json">\n  ${json(block, "  ")}\n  </script>`)
+    .join("\n");
+}
+
+function versePage(verse) {
+  const chapter = chapters.find((entry) => entry.n === verse.chapter);
+  if (!chapter) throw new Error(`No chapter metadata for verse ${verse.id}`);
+  const meta = verseMeta(verse, chapter);
+  const url = verseUrl(verse);
+  const at = verseIndex.get(verse.id);
+  const prev = at > 0 ? flatVerses[at - 1] : null;
+  const next = at < flatVerses.length - 1 ? flatVerses[at + 1] : null;
+  const labels = config.versePage.labels || {};
+
+  const meanings = [];
+  if (en[verse.id]) {
+    meanings.push(
+      `      <section class="verse-translation" lang="en">`,
+      `        <h2 class="verse-label">${esc(labels.english || "English meaning")}</h2>`,
+      `        <p class="translation-line">${lines(en[verse.id])}</p>`,
+      `      </section>`,
+    );
+  }
+  if (hi[verse.id]) {
+    meanings.push(
+      `      <section class="verse-translation" lang="hi">`,
+      `        <h2 class="verse-label">${esc(labels.hindi || "Hindi meaning")}</h2>`,
+      `        <p class="translation-line">${lines(hi[verse.id])}</p>`,
+      `      </section>`,
+    );
+  }
+
+  const verseNav = [
+    prev ? `      <a rel="prev" href="verse-${prev.chapter}-${prev.verse}.html">← ${esc(prev.id)}</a>` : `      <span></span>`,
+    `      <a href="chapter-${chapter.n}.html">Chapter ${chapter.n}</a>`,
+    next ? `      <a rel="next" href="verse-${next.chapter}-${next.verse}.html">${esc(next.id)} →</a>` : `      <span></span>`,
+  ].join("\n");
+
+  return `<!doctype html>
+<!-- Generated by scripts/build-seo.mjs. Do not edit by hand; edit the data or data/seo-config.json and re-run it. -->
+<html lang="en" data-theme="vedic-light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${esc(meta.title)}</title>
+  <meta name="description" content="${esc(meta.description)}">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="${url}">
+${prev ? `  <link rel="prev" href="${verseUrl(prev)}">\n` : ""}${next ? `  <link rel="next" href="${verseUrl(next)}">\n` : ""}${authorHead()}${ANALYTICS_PRECONNECT}  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Ask Krishna">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="${esc(meta.title)}">
+  <meta property="og:description" content="${esc(meta.description)}">
+  <meta property="og:url" content="${url}">
+  <meta property="og:image" content="${esc(config.ogImage)}">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="${esc(config.ogImageAlt)}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="${esc(meta.title)}">
+  <meta name="twitter:description" content="${esc(meta.description)}">
+  <meta name="twitter:image" content="${esc(config.ogImage)}">
+  <meta name="twitter:image:alt" content="${esc(config.ogImageAlt)}">
+  <link rel="icon" type="image/svg+xml" href="../assets/ask-krishna-logo.svg">
+${verseJsonLd(verse, chapter, meta)}
+  <script>document.documentElement.dataset.theme = localStorage.getItem("askKrishna.theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "vedic-dark" : "vedic-light"); document.documentElement.classList.add("has-js");</script>
+  <link rel="stylesheet" href="../assets/themes.css">
+  <link rel="stylesheet" href="../assets/styles.css">
+  <link rel="stylesheet" href="../assets/chapter.css">
+${READER_SCRIPTS}
+</head>
+<body data-page="read" data-chapter="${verse.chapter}" data-verse="${verse.verse}">
+  <main class="screen" data-screen></main>
+  <article class="chapter-text verse-page" data-chapter-text>
+    <nav class="chapter-crumbs" aria-label="Breadcrumb"><a href="../">Ask Krishna</a> · <a href="read.html">${esc(config.reader.name)}</a> · <a href="chapter-${chapter.n}.html">Chapter ${chapter.n}</a></nav>
+    <header class="chapter-head">
+      <h1 class="chapter-title">${esc(meta.heading)}</h1>
+      <p class="chapter-name-sa" lang="sa">${esc(chapter.sa)}</p>
+      <p class="chapter-intro">${esc(meta.intro)}</p>
+      <p><a href="read.html#${verse.id}">${esc(config.versePage.readerLink)}</a></p>
+    </header>
+    <div class="chapter-verses">
+      <section class="passage-card chapter-verse" id="${verse.chapter}-${verse.verse}">
+        <h2 class="verse-label">${esc(labels.sanskrit || "Sanskrit (Devanagari)")}</h2>
+        <p class="sanskrit-line" lang="sa">${lines(verse.sanskrit)}</p>
+${meanings.join("\n")}
+      </section>
+    </div>
+    <nav class="chapter-pager verse-pager" aria-label="Verses">
+${verseNav}
+    </nav>
+    <footer class="chapter-foot">
+      <p>${esc(locales.en.disclaimer)}</p>
+      <p>${esc(config.chapterPage.attribution)} <a href="${esc(config.noticeUrl)}">Details</a></p>
+    </footer>
+  </article>
+${COUNTER}
+</body>
+</html>
+`;
+}
+
 // ---- marked regions ----------------------------------------------------------
 
 function replaceRegion(text, name, body, file) {
@@ -220,10 +410,26 @@ function readerJsonLd() {
     url: READER_URL,
     inLanguage: ["en", "hi", "sa"],
     isPartOf: { "@id": APP_ID },
-    about: { "@type": "Book", name: "Bhagavad Gita", inLanguage: "sa" },
+    about: {
+      "@type": "Book",
+      name: "Bhagavad Gita",
+      alternateName: BOOK_ALT,
+      inLanguage: "sa",
+    },
     hasPart: chapters.map((chapter) => ({ "@type": "WebPage", name: chapter.heading, url: chapter.url })),
+    ...(authorPerson ? { author: authorPerson } : {}),
   };
-  return `  <script type="application/ld+json">\n  ${json(block, "  ")}\n  </script>\n`;
+  const crumbs = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Ask Krishna", item: BASE },
+      { "@type": "ListItem", position: 2, name: config.reader.name, item: READER_URL },
+    ],
+  };
+  return [block, crumbs]
+    .map((entry) => `  <script type="application/ld+json">\n  ${json(entry, "  ")}\n  </script>\n`)
+    .join("");
 }
 
 function readerNoscriptList() {
@@ -247,6 +453,7 @@ function llmsTxt() {
 <!-- Generated by scripts/build-seo.mjs from the data files. Do not edit by hand. -->
 
 Live site: ${BASE}
+${AUTHOR?.name && AUTHOR?.url ? `Author: ${AUTHOR.name} (${AUTHOR.url})` : ""}
 
 ## How the site works
 
@@ -260,8 +467,9 @@ The interface is in English, Hindi or Sanskrit. Saved verses and passages are ma
 ## Linking to a chapter or verse
 
 - A chapter: \`${BASE}pages/chapter-2.html\`. It opens the reader at verse 2.1 after the purification screen. The page's HTML also holds the whole chapter text.
-- A verse: \`${BASE}pages/chapter-2.html#2-47\` or \`${READER_URL}#2.47\`. Both open verse 2.47 after the purification screen.
-- Verse ids are \`chapter.verse\`, for example \`2.47\`. In chapter-page anchors the dot becomes a hyphen (\`#2-47\`).
+- A verse (dedicated page for search): \`${BASE}pages/verse-2-47.html\` — Sanskrit shloka with English and Hindi meaning; opens the reader at 2.47 when JavaScript runs.
+- Reader deep links: \`${READER_URL}#2.47\`, \`pages/chapter-2.html#2-47\` (anchor on the chapter page).
+- Verse ids are \`chapter.verse\`, for example \`2.47\`. File names use a hyphen: \`verse-2-47.html\`.
 
 ## Chapters
 
@@ -286,7 +494,7 @@ Note on numbering: this edition has ${totalVerses} verses, not the commonly quot
 
 ## Suggested use
 
-- For a single verse, quote verses.json plus one translation file, and link to the chapter page anchor (\`pages/chapter-N.html#N-M\`).
+- For a single verse, quote verses.json plus one translation file, and link to \`pages/verse-N-M.html\` (or the chapter page anchor \`pages/chapter-N.html#N-M\`).
 - For a whole chapter, use the chapter page or the matching section of llms-full.txt.
 - Ask Krishna is a reflection aid, not a religious authority. Present it as a place to read and reflect.
 `;
@@ -302,7 +510,7 @@ function llmsFullTxt() {
   for (const chapter of chapters) {
     parts.push(`## Chapter ${chapter.n}: ${chapter.name} (${chapter.sa})`, "", `${chapter.url}`, "");
     for (const verse of chapter.verses) {
-      parts.push(`### ${verse.id}`, "", verse.sanskrit.trim(), "");
+      parts.push(`### ${verse.id}`, "", verseUrl(verse), "", verse.sanskrit.trim(), "");
       if (en[verse.id]) parts.push(`English: ${en[verse.id].trim()}`, "");
       if (hi[verse.id]) parts.push(`Hindi: ${hi[verse.id].trim()}`, "");
     }
@@ -314,6 +522,7 @@ function llmsFullTxt() {
 
 const outputs = new Map();
 chapters.forEach((chapter, index) => outputs.set(chapter.file, chapterPage(chapter, index)));
+flatVerses.forEach((verse) => outputs.set(verseFile(verse), versePage(verse)));
 
 let readHtml = read("pages/read.html");
 readHtml = replaceRegion(readHtml, "jsonld", readerJsonLd(), "pages/read.html");
@@ -331,6 +540,7 @@ const pageHashes = [
   [BASE, hash(read("index.html") + metaOf("title") + metaOf("description"))],
   [READER_URL, hash(readHtml + metaOf("readTitle") + metaOf("readDescription"))],
   ...chapters.map((chapter) => [chapter.url, hash(outputs.get(chapter.file))]),
+  ...flatVerses.map((verse) => [verseUrl(verse), hash(outputs.get(verseFile(verse)))]),
 ];
 const date = today();
 const manifest = { note: "Generated by scripts/build-seo.mjs; keeps sitemap lastmod stable.", urls: {} };
@@ -359,6 +569,17 @@ for (const [file, content] of outputs) {
   if (current === content) continue;
   stale.push(file);
   if (!CHECK) writeFileSync(path, content);
+}
+
+if (!CHECK) {
+  const pagesDir = join(ROOT, "pages");
+  const versePattern = /^verse-\d+-\d+\.html$/;
+  const keep = new Set([...outputs.keys()].filter((file) => file.startsWith("pages/")).map((file) => file.slice("pages/".length)));
+  for (const name of readdirSync(pagesDir)) {
+    if (!versePattern.test(name) || keep.has(name)) continue;
+    unlinkSync(join(pagesDir, name));
+    stale.push(`pages/${name} (removed)`);
+  }
 }
 
 if (CHECK) {

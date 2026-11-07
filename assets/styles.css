@@ -443,6 +443,18 @@ button:disabled {
   text-align: center;
 }
 
+.site-footer p {
+  margin: 0;
+}
+
+.author-credit {
+  margin-top: 0.45rem;
+}
+
+.author-credit a {
+  color: inherit;
+}
+
 .brand-heading {
   display: flex;
   margin: 0;

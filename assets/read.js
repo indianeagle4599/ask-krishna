@@ -88,6 +88,8 @@
     const hash = AK.hashVerseId();
     if (VERSE_HASH.test(hash) && AK.verseById(hash)) return hash;
     const chapter = document.body.dataset.chapter;
+    const verse = document.body.dataset.verse;
+    if (chapter && verse && AK.verseById(`${chapter}.${verse}`)) return `${chapter}.${verse}`;
     if (chapter && AK.verseById(`${chapter}.1`)) return `${chapter}.1`;
     return "";
   };
