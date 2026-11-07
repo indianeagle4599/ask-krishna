@@ -144,11 +144,12 @@ Saved reflection passages are rendered in-browser as PNG cards; no image service
 
 ## Search pages (run after data changes)
 
-Every chapter also has its own address, generated from the same data the app uses:
+Every chapter and every shloka also has its own address, generated from the same data the app uses:
 
 - `pages/chapter-1.html` … `pages/chapter-18.html` — each one is the reader. A visitor goes through the same purification, "Remember Lord Krishna." and Read steps, and Read opens that chapter's first verse (or the verse in the link, such as `chapter-2.html#2-47`). The page also carries the whole chapter (Sanskrit, English and Hindi for every verse) as plain text, which is what search engines and link previews read; the app hides it once JavaScript runs, and it is the page when JavaScript is off.
+- `pages/verse-1-1.html` … `pages/verse-18-78.html` — one crawlable page per verse (701 shlokas), with its own title, description, breadcrumbs, and JSON-LD. Example: `pages/verse-2-47.html`. With JavaScript, the page is still the reader opened at that verse; without it, the verse text and meanings are the page.
 - `read.html#2.47` style links work the same way: after Read the reader opens that verse instead of the index.
-- `sitemap.xml` — home, reader and the 18 chapter pages. A page's `lastmod` only changes when its content changes (hashes live in `data/seo-manifest.json`).
+- `sitemap.xml` — home, reader, the 18 chapter pages, and all 701 verse pages. A page's `lastmod` only changes when its content changes (hashes live in `data/seo-manifest.json`).
 - `llms.txt` (a guide to the site and its data for AI tools) and `llms-full.txt` (every verse as plain text), both generated in full.
 - The marked JSON-LD and no-JavaScript chapter list in `pages/read.html`.
 
@@ -168,7 +169,9 @@ It uses Node's built-in modules only. Do not edit the generated files or the mar
 
 ## Deploy
 
-Published via GitHub Pages at [https://hiteshgoyal.me/ask-krishna/](https://hiteshgoyal.me/ask-krishna/). SEO files (`robots.txt`, `sitemap.xml`, `llms.txt`) and canonical URLs point to that base path.
+Published via GitHub Pages at [https://hiteshgoyal.me/ask-krishna/](https://hiteshgoyal.me/ask-krishna/). Canonical URLs, `sitemap.xml`, and `llms.txt` use that base path.
+
+Crawlers read `robots.txt` only from the host root (`https://hiteshgoyal.me/robots.txt`). That file allows crawling and points at `https://hiteshgoyal.me/sitemap.xml`, which today lists the project card at `/projects/?slug=ask-krishna` and does not list this app’s URLs. `https://hiteshgoyal.me/ask-krishna/robots.txt` is still served for completeness, but crawlers do not apply a robots file from a sub-path. The app sitemap remains at `https://hiteshgoyal.me/ask-krishna/sitemap.xml` (home, reader, and all 18 chapter pages). The root sitemap needs those URLs, or a line pointing at the app sitemap, before crawlers are told about them—that root file lives outside this repo.
 
 ## Data
 

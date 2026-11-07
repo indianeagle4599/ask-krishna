@@ -300,7 +300,16 @@
   AK.footer = function () {
     const el = document.createElement("footer");
     el.className = "site-footer";
-    el.textContent = AK.text("disclaimer");
+    const note = document.createElement("p");
+    note.textContent = AK.text("disclaimer");
+    const credit = document.createElement("p");
+    credit.className = "author-credit";
+    const link = document.createElement("a");
+    link.href = "https://hiteshgoyal.me";
+    link.rel = "author";
+    link.textContent = AK.text("authorName") || "Hitesh Goyal";
+    credit.append(link);
+    el.append(note, credit);
     return el;
   };
 
