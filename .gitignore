@@ -7,6 +7,9 @@ CLAUDE.md
 TODO.md
 
 # Local scratch and platform noise.
+node_modules/
+package.json
+package-lock.json
 .DS_Store
 Thumbs.db
 *.log
