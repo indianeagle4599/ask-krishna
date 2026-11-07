@@ -8,23 +8,30 @@
   },
   "ogImage": "https://hiteshgoyal.me/ask-krishna/assets/og-image.png",
   "ogImageAlt": "Ask Krishna logo, an open scripture on a lotus, with the words Bhagavad Gita reflection",
+  "bookAlternateNames": [
+    "Bhagavad Geeta",
+    "Bhagavad Geetha",
+    "Bhagavat Gita",
+    "Bhagwat Gita",
+    "भगवद्गीता"
+  ],
   "reader": {
     "name": "Read the Bhagavad Gita",
-    "description": "Read all 18 chapters of the Bhagavad Gita online, one verse at a time: Sanskrit with English or Hindi meaning. Bookmark verses and pick up where you left off."
+    "description": "Read the Bhagavad Gita (Bhagavad Geeta, Geetha, Bhagavat Gita) online — all 18 adhyays, one shloka at a time: Sanskrit in Devanagari with English or Hindi meaning. Bookmark verses in Ask Krishna."
   },
   "chapterPage": {
     "title": "Bhagavad Gita Chapter {n}, {name} — all {count} shlokas",
-    "description": "Bhagavad Gita (Bhagavad Geeta, Bhagwat Geeta) Chapter {n}, {name} — adhyay {n}: all {count} shlokas in Sanskrit (Devanagari) with English and Hindi meanings.",
+    "description": "Bhagavad Gita (Bhagavad Geeta, Geetha, Bhagavat Gita) Chapter {n}, {name} — adhyay {n}: all {count} shlokas (slokas) in Sanskrit (Devanagari) with English and Hindi meanings.",
     "heading": "Bhagavad Gita Chapter {n}: {name}",
-    "intro": "All {count} shlokas of adhyay {n} ({name}, {sa}) — भगवद्गीता अध्याय {n}. Each verse has its own page; read one at a time in Ask Krishna.",
+    "intro": "All {count} shlokas (slokas) of adhyay {n} — {name} ({sa}), भगवद्गीता अध्याय {n}. From the Bhagavad Geeta, Geetha, or Bhagavat Gita; each shlok has its own page. Read in Ask Krishna (Krishna, Krsna, Krishn).",
     "readerLink": "Read one verse at a time in Ask Krishna",
     "attribution": "English translation: Swami Sivananda. Hindi translation: Swami Tejomayananda. Text from the VedicScriptures dataset (MIT License)."
   },
   "versePage": {
     "title": "Bhagavad Gita Chapter {c} Verse {v} — meaning and translation",
-    "description": "Bhagavad Gita (Geeta) Chapter {c}, shloka {v} — {name}, adhyay {c}: Sanskrit in Devanagari with English and Hindi meaning.",
+    "description": "Bhagavad Gita (Geetha, Bhagavat Gita) Chapter {c}, shlok {v} — {name}, adhyay {c}: Sanskrit in Devanagari with English and Hindi meaning.",
     "heading": "Bhagavad Gita Chapter {c}, Verse {v}",
-    "intro": "Shloka (sloka) {v} of adhyaya {c}: {name} ({sa}).",
+    "intro": "Shlok {v} (sloka {v}) of adhyaya {c} — {name} ({sa}), from the Bhagavad Geeta or Bhagavat Gita (भगवद्गीता). Open in Ask Krishna.",
     "readerLink": "Open this verse in Ask Krishna",
     "labels": {
       "sanskrit": "Sanskrit (Devanagari)",

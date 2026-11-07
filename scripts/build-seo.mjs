@@ -52,7 +52,9 @@ const APP_ID = `${BASE}#app`;
 const chapterUrl = (n) => `${BASE}pages/chapter-${n}.html`;
 const verseFile = (verse) => `pages/verse-${verse.chapter}-${verse.verse}.html`;
 const verseUrl = (verse) => `${BASE}${verseFile(verse)}`;
-const BOOK_ALT = ["Bhagavad Geeta", "Bhagwat Gita", "भगवद्गीता"];
+const BOOK_ALT = config.bookAlternateNames?.length
+  ? config.bookAlternateNames
+  : ["Bhagavad Geeta", "भगवद्गीता"];
 const AUTHOR = config.author;
 const authorPerson = AUTHOR?.name && AUTHOR?.url
   ? { "@type": "Person", name: AUTHOR.name, url: AUTHOR.url }
