@@ -472,6 +472,25 @@ button:disabled {
   color: inherit;
 }
 
+/* Sacred flows (home & purification): first viewport = header + mantra + action; footer below fold. */
+body[data-page="index"] .screen,
+body[data-page="reflect"] .screen,
+body[data-page="read"] .screen:has(> .center) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 4rem);
+  min-height: calc(100svh - 4rem);
+  min-height: calc(100dvh - 4rem);
+}
+
+body[data-page="index"] .center,
+body[data-page="reflect"] .center,
+body[data-page="read"] .center {
+  min-height: auto;
+  width: 100%;
+}
+
 /* Short viewports (phone landscape): sacred / Begin screens only — not the verse reader. */
 @media (max-height: 31.25rem) {
   body[data-page="index"] .topbar,
@@ -484,17 +503,15 @@ button:disabled {
   body[data-page="index"] .screen,
   body[data-page="reflect"] .screen,
   body[data-page="read"] .screen:has(> .center) {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: calc(100vh - 2.65rem);
+    min-height: calc(100vh - 2.6rem);
+    min-height: calc(100svh - 2.6rem);
+    min-height: calc(100dvh - 2.6rem);
     padding: 0.5rem 0.85rem 0.55rem;
   }
 
   body[data-page="index"] .center,
   body[data-page="reflect"] .center,
   body[data-page="read"] .center {
-    min-height: auto;
     gap: 0.45rem;
   }
 
