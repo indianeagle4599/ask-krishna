@@ -122,7 +122,7 @@ for (const verse of verses) {
 const chapters = config.chapters.map((chapter) => {
   const list = (byChapter.get(chapter.n) || []).slice().sort((a, b) => a.verse - b.verse);
   if (!list.length) throw new Error(`No verses found for chapter ${chapter.n}`);
-  const values = { n: chapter.n, name: chapter.name, count: list.length };
+  const values = { n: chapter.n, name: chapter.name, sa: chapter.sa, count: list.length };
   return {
     ...chapter,
     verses: list,
