@@ -350,6 +350,23 @@ button:disabled {
   border-block: 1px solid var(--subtle);
 }
 
+/* Single-verse reader: one rule between Sanskrit and English, not a stack of bands. */
+.passage-card:not(.triad) .sanskrit-line.main {
+  border-bottom: none;
+  padding-bottom: 0.15rem;
+}
+
+.passage-card:not(.triad) .translation-set {
+  margin-top: 0.65rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid var(--subtle);
+}
+
+.passage-card:not(.triad) .translation-line.main {
+  border-block: none;
+  padding: 0;
+}
+
 .passage-card.triad .translation-set {
   margin-top: 0.5rem;
   padding-top: 1.5rem;
@@ -453,6 +470,142 @@ button:disabled {
 
 .author-credit a {
   color: inherit;
+}
+
+/* Sacred flows (home & purification): first viewport = header + mantra + action; footer below fold. */
+body[data-page="index"] .screen,
+body[data-page="reflect"] .screen,
+body[data-page="read"] .screen:has(> .center) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 4rem);
+  min-height: calc(100svh - 4rem);
+  min-height: calc(100dvh - 4rem);
+}
+
+body[data-page="index"] .center,
+body[data-page="reflect"] .center,
+body[data-page="read"] .center {
+  min-height: auto;
+  width: 100%;
+}
+
+/* Short viewports (phone landscape): sacred / Begin screens only — not the verse reader. */
+@media (max-height: 31.25rem) {
+  body[data-page="index"] .topbar,
+  body[data-page="reflect"] .topbar,
+  body[data-page="read"]:has(.screen > .center) .topbar {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.82rem;
+  }
+
+  body[data-page="index"] .screen,
+  body[data-page="reflect"] .screen,
+  body[data-page="read"] .screen:has(> .center) {
+    min-height: calc(100vh - 2.6rem);
+    min-height: calc(100svh - 2.6rem);
+    min-height: calc(100dvh - 2.6rem);
+    padding: 0.5rem 0.85rem 0.55rem;
+  }
+
+  body[data-page="index"] .center,
+  body[data-page="reflect"] .center,
+  body[data-page="read"] .center {
+    gap: 0.45rem;
+  }
+
+  body[data-page="index"] .mantra,
+  body[data-page="reflect"] .mantra,
+  body[data-page="read"] .center .mantra {
+    font-size: clamp(0.9rem, 3.6vw, 1.22rem);
+    line-height: 1.45;
+  }
+
+  body[data-page="index"] .chosen,
+  body[data-page="read"] .center .chosen {
+    margin-top: 0.2rem;
+  }
+
+  body[data-page="index"] .brand-logo,
+  body[data-page="reflect"] .brand-logo,
+  body[data-page="read"]:has(.screen > .center) .brand-logo {
+    width: 1.55rem;
+    height: 1.55rem;
+  }
+
+  body[data-page="index"] .pulse,
+  body[data-page="reflect"] .pulse,
+  body[data-page="read"] .center .pulse {
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+}
+
+/* Mid-short landscape (e.g. 844×390): a few pixels of extra tight spacing. */
+@media (max-height: 25.5rem) and (min-height: 23.5rem) {
+  body[data-page="index"] .screen,
+  body[data-page="reflect"] .screen,
+  body[data-page="read"] .screen:has(> .center) {
+    padding-bottom: 0.32rem;
+  }
+
+  body[data-page="index"] .center,
+  body[data-page="reflect"] .center,
+  body[data-page="read"] .center {
+    gap: 0.3rem;
+  }
+
+  body[data-page="index"] .topbar,
+  body[data-page="reflect"] .topbar,
+  body[data-page="read"]:has(.screen > .center) .topbar {
+    padding-top: 0.32rem;
+    padding-bottom: 0.32rem;
+  }
+
+}
+
+/* Very short landscape: tighten spacing only (transliteration stays visible). */
+@media (max-height: 23.5rem) {
+  body[data-page="index"] .screen,
+  body[data-page="reflect"] .screen,
+  body[data-page="read"] .screen:has(> .center) {
+    padding: 0.35rem 0.75rem 0.4rem;
+  }
+
+  body[data-page="index"] .center,
+  body[data-page="reflect"] .center,
+  body[data-page="read"] .center {
+    gap: 0.4rem;
+  }
+
+  body[data-page="index"] .mantra,
+  body[data-page="reflect"] .mantra,
+  body[data-page="read"] .center .mantra {
+    font-size: clamp(0.86rem, 3.2vw, 1.08rem);
+    line-height: 1.38;
+  }
+
+  body[data-page="index"] .chosen,
+  body[data-page="read"] .center .chosen {
+    margin-top: 0.25rem;
+  }
+}
+
+/* Ultra-wide desktops: slightly larger type only (never below main defaults). */
+@media (min-width: 120rem) {
+  .mantra,
+  .verse-text {
+    font-size: clamp(1.18rem, 5vw, 1.95rem);
+  }
+
+  .translation-line {
+    font-size: clamp(1.2rem, 4.5vw, 1.75rem);
+  }
+
+  .sanskrit-line {
+    font-size: clamp(0.95rem, 3.4vw, 1.22rem);
+  }
 }
 
 .brand-heading {
