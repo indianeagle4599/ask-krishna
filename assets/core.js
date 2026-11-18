@@ -323,8 +323,10 @@
         AK.screen.className = "screen";
         AK.screen.dataset.screen = "";
       }
-      // Keep a chapter page's full text in the page (shown only without JavaScript).
+      // Keep a page's full text in the page, rendered under the reader.
       const kept = [...document.querySelectorAll("[data-chapter-text]")];
+      // It stays rendered under the reader; inert keeps focus and screen readers out of it.
+      kept.forEach((el) => { el.inert = true; });
       document.body.replaceChildren(topbar, AK.screen, footer, ...kept, ...(counter ? [counter] : []));
       AK._shell = true;
     } else {

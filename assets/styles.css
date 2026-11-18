@@ -250,6 +250,29 @@ button:disabled {
   background: linear-gradient(135deg, var(--swatch-bg) 50%, var(--swatch-fg) 50%);
 }
 
+/* With JavaScript the reader (top bar, purify pause, verse card, footer) is
+   drawn over the page text, exactly as before. The text itself stays real,
+   laid-out page content: never display:none or visibility:hidden. It sits in
+   a fixed layer under the reader's own opaque background, so it adds no
+   scroll height, cannot flash before the pause appears (has-js is set in the
+   head, before first paint) and is the same for every visitor. A plain veil
+   between the two covers it during overscroll bounce. core.js marks it
+   inert so keyboard and screen-reader users don't land in it. Only the
+   verse, chapter and read pages set has-js. */
+.has-js .chapter-text {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+}
+
+.has-js body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--bg);
+}
+
 .screen {
   width: min(100%, 46rem);
   margin: auto;
