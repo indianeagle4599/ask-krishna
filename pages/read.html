@@ -175,7 +175,7 @@
   }
   </script>
   <!-- seo:jsonld:end -->
-  <script>document.documentElement.dataset.theme = localStorage.getItem("askKrishna.theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "vedic-dark" : "vedic-light");</script>
+  <script>document.documentElement.dataset.theme = localStorage.getItem("askKrishna.theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "vedic-dark" : "vedic-light"); document.documentElement.classList.add("has-js");</script>
   <link rel="stylesheet" href="../assets/themes.css">
   <link rel="stylesheet" href="../assets/styles.css">
   <script src="../assets/i18n.js" defer></script>
@@ -186,7 +186,7 @@
   <script src="../assets/app.js" defer></script>
 </head>
 <body data-page="read">
-  <noscript>
+  <article class="chapter-text" data-chapter-text>
     <h1>Read the Bhagavad Gita</h1>
     <p>Read all 18 chapters of the Bhagavad Gita online, one verse at a time: Sanskrit with English or Hindi meaning. Bookmark verses and pick up where you left off.</p>
     <p><a href="../">Return to Ask Krishna</a></p>
@@ -213,7 +213,7 @@
     </ul>
     <!-- seo:chapters:end -->
     <p><a href="https://hiteshgoyal.me" rel="author">Hitesh Goyal</a></p>
-  </noscript>
+  </article>
   <main class="screen" data-screen></main>
   <script data-goatcounter="https://hitesh-krishna.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
